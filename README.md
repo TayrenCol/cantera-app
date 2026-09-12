@@ -3,7 +3,7 @@
 Sistema SaaS multi-tenant para la gestión integral de escuelas deportivas, automatización de expedientes digitales, seguimiento documental y administración de pagos recurrentes.
 
 * **Repositorio Oficial:** [https://github.com/TayrenCol/cantera-app](https://github.com/TayrenCol/cantera-app)
-* **Entorno de Ejecución:** Node.js (v22.x LTS) + Express sobre Hostinger Business Web Hosting[cite: 2, 3].
+* **Entorno de Ejecución:** Node.js (v22.x LTS) + Express sobre Hostinger Business Web Hosting.
 * **Base de Datos:** MySQL (Gestión mediante phpMyAdmin y conexión `mysql2`).
 
 ---
@@ -12,31 +12,37 @@ Sistema SaaS multi-tenant para la gestión integral de escuelas deportivas, auto
 
 El proyecto cuenta con dos entornos totalmente aislados en Hostinger para garantizar la estabilidad del código en producción y evitar la contaminación de datos reales durante el desarrollo.
 
-┌─────────────────────────────────────────┐
-                     │   [https://github.com/TayrenCol/cantera-app]   │
-                     └────────────────────┬────────────────────┘
-                                          │
-                 ┌────────────────────────┴────────────────────────┐
-                 ▼                                                 ▼
-          [ Rama: dev ]                                     [ Rama: main ]
-                 │                                                 │
-                 ▼                                                 ▼
-  ┌─────────────────────────────┐                   ┌─────────────────────────────┐
-  │      Entorno de PRUEBAS     │                   │    Entorno de PRODUCCIÓN    │
-  ├─────────────────────────────┤                   ├─────────────────────────────┤
-  │ URL Temporal:               │                   │ URL Temporal:               │
-  │ ghostwhite-swallow-...      │                   │ violet-termite-...          │
-  │                             │                   │                             │
-  │ DB: u448206008_cantera_dev  │                   │ DB: u448206008_cantera_prod │
-  │ NODE_ENV: development       │                   │ NODE_ENV: production        │
-  └─────────────────────────────┘                   └─────────────────────────────┘
+```text
+===========================================================================
+                      REPOSITORIO CENTRAL EN GITHUB                        
+               https://github.com/TayrenCol/cantera-app                    
+===========================================================================
+                                    │
+                  ┌─────────────────┴─────────────────┐
+                  ▼                                   ▼
+            [ Rama: dev ]                       [ Rama: main ]
+                  │                                   │
+                  ▼                                   ▼
+  ┌──────────────────────────────┐    ┌──────────────────────────────┐
+  │     ENTORNO DE PRUEBAS       │    │    ENTORNO DE PRODUCCIÓN     │
+  ├──────────────────────────────┤    ├──────────────────────────────┤
+  │ URL Temporal:                │    │ URL Temporal:                │
+  │ ghostwhite-swallow-...       │    │ violet-termite-...           │
+  │                              │    │                              │
+  │ Base de Datos:               │    │ Base de Datos:               │
+  │ u448206008_cantera_dev       │    │ u448206008_cantera_prod      │
+  │                              │    │                              │
+  │ Variable de Entorno:         │    │ Variable de Entorno:         │
+  │ NODE_ENV = development       │    │ NODE_ENV = production        │
+  └──────────────────────────────┘    └──────────────────────────────┘
+```
 
 ### Tabla de Entornos
 
-| Entorno | URL Temporal | Rama Git[cite: 2, 3] | Base de Datos MySQL | Flag `NODE_ENV` |
+| Entorno | URL Temporal | Rama Git | Base de Datos MySQL | Flag `NODE_ENV` |
 | :--- | :--- | :--- | :--- | :--- |
-| **Producción** | `violet-termite-484823.hostingersite.com` | `main`[cite: 2, 3] | `u448206008_cantera_prod`[cite: 1] | `production` |
-| **Pruebas (DEV)** | `ghostwhite-swallow-284933.hostingersite.com` | `dev`[cite: 2, 3] | `u448206008_cantera_dev`[cite: 1] | `development`[cite: 1, 3] |
+| **Producción** | `violet-termite-484823.hostingersite.com` | `main` | `u448206008_cantera_prod` | `production` |
+| **Pruebas (DEV)** | `ghostwhite-swallow-284933.hostingersite.com` | `dev` | `u448206008_cantera_dev` | `development` |
 
 ---
 
@@ -45,8 +51,8 @@ El proyecto cuenta con dos entornos totalmente aislados en Hostinger para garant
 * **Almacenamiento:** 50 GB compartidos.
 * **Procesamiento:** 2 Núcleos CPU / 3072 MB RAM.
 * **Límites de Procesos:** 120 procesos máximos concurrentes / 60 PHP Workers.
-* **Bases de Datos:** MySQL nativo. Límite máximo de 3 GB por base de datos[cite: 1].
-* **Puerto del Servidor:** Asignación dinámica mediante `process.env.PORT || 3000`[cite: 1, 3].
+* **Bases de Datos:** MySQL nativo. Límite máximo de 3 GB por base de datos.
+* **Puerto del Servidor:** Asignación dinámica mediante `process.env.PORT || 3000`.
 
 ---
 
