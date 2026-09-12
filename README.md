@@ -60,6 +60,7 @@ git clone [https://github.com/TayrenCol/cantera-app.git]
 cd cantera-app
 npm install
 cp .env.example .env
+```
 
 ### Paso 2: Crear una Rama de Trabajo
 Nunca hagas commits directos en dev ni en main. Crea siempre una rama secundaria basada en dev:
@@ -69,12 +70,14 @@ git pull origin dev
 git checkout -b feature/nombre-de-la-funcionalidad
 # o para correcciones:
 git checkout -b fix/nombre-del-error
+```
 
 ### Paso 3: Confirmar Cambios y Subir a GitHub
 ```bash
 git add .
 git commit -m "feat: descripción breve del cambio realizado"
 git push origin feature/nombre-de-la-funcionalidad
+```
 
 ### Paso 4: Despliegue a Pruebas (Pull Request -> dev)
 1. Ve al repositorio en GitHub y abre un Pull Request (PR) hacia la rama dev.
@@ -104,6 +107,7 @@ const db = mysql.createPool({
 });
 
 export default db;
+```
 
 ## Reglas de Seguridad SQL (Prevención de Inyección SQL)
 Utiliza siempre consultas preparadas (db.execute)
@@ -118,6 +122,7 @@ export const getUserByEmail = async (email) => {
   const [rows] = await db.execute('SELECT * FROM users WHERE email = ?', [email]);
   return rows[0];
 };
+```
 
 ## 5. Reglas de Oro del Proyecto
 1. Protección de main: Nadie realiza git push directo a main. Todo código en producción proviene de un PR revisado desde dev.
