@@ -1,6 +1,7 @@
 import express from 'express';
 import dotenv from 'dotenv';
 import db from './config/db.js';
+import dashboardRoutes from './routes/dashboardRoutes.js';
 
 dotenv.config();
 
@@ -8,6 +9,8 @@ const app = express();
 const port = process.env.PORT || 3000;
 
 app.use(express.json());
+app.use(express.static('public'));
+app.use('/api/dashboard', dashboardRoutes);
 
 // Endpoint de verificación del estado del servicio
 app.get('/health', async (req, res) => {
@@ -28,9 +31,9 @@ app.get('/health', async (req, res) => {
   }
 });
 
-// Ruta principal
+// Ruta principal: sirve la vista del dashboard
 app.get('/', (req, res) => {
-  res.send('API Cantera App ejecutándose correctamente');
+  res.sendFile('index.html', { root: 'public' });
 });
 
 // Listener de Express (importante escuchar en '0.0.0.0')
