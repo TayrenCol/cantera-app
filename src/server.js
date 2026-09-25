@@ -9,10 +9,10 @@ const port = process.env.PORT || 3000;
 
 app.use(express.json());
 
-// Endpoint de verificación del estado del servicio
+// Endpoint de verificación del estado del servicio y la base de datos
 app.get('/health', async (req, res) => {
   try {
-    // Test rápido de consulta a la base de datos MySQL
+    // Test rápido de consulta a la base de datos MySQL usando el pool
     await db.query('SELECT 1');
     res.status(200).json({ 
       status: 'OK',
@@ -33,7 +33,7 @@ app.get('/', (req, res) => {
   res.send('API Cantera App ejecutándose correctamente');
 });
 
-// Listener de Express (importante escuchar en '0.0.0.0')
+// Listener de Express (importante escuchar en '0.0.0.0' para Hostinger)
 app.listen(port, '0.0.0.0', () => {
   console.log(`Servidor de Cantera App listo en el puerto ${port}`);
 });
