@@ -1,11 +1,14 @@
 import express from 'express';
 import dotenv from 'dotenv';
 import db from './config/db.js';
+import express from 'express';
+import helpData from '../data/helpData.json' assert { type: 'json' };
 
 dotenv.config();
 
 const app = express();
 const port = process.env.PORT || 3000;
+const router = express.Router();
 
 app.use(express.json());
 
@@ -37,3 +40,20 @@ app.get('/', (req, res) => {
 app.listen(port, '0.0.0.0', () => {
   console.log(`Servidor de Cantera App listo en el puerto ${port}`);
 });
+
+// Endpoint público para obtener las guías de ayuda
+router.get('/api/help', (req, res) => {
+  try {
+    res.status(200).json({
+      success: true,
+      data: helpData
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: 'Error al obtener la información del Centro de Ayuda'
+    });
+  }
+});
+
+export default router;

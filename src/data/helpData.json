@@ -1,0 +1,40 @@
+{
+  "modulo": "Centro de Ayuda - Cantera App",
+  "version": "1.0-MVP",
+  "categorias": [
+    {
+      "id": "cartera-pagos",
+      "titulo": "Gestión de Mensualidades y Pagos",
+      "icono": "credit-card",
+      "preguntas": [
+        {
+          "pregunta": "¿Cuándo se vencen las mensualidades de los jugadores?",
+          "respuesta": "Las mensualidades se deben cancelar durante el primer fin de semana de cada mes. El sistema activará automáticamente una alerta de pago pendiente/vencido el primer lunes hábil posterior a esta fecha."
+        },
+        {
+          "pregunta": "¿Cuáles son las tarifas según la categoría del jugador?",
+          "respuesta": "Categorías 2022-2023: Mensualidad $80.000 / Inscripción $190.000. Categorías 2021 a 2013-2014: Mensualidad $110.000 / Inscripción $300.000."
+        },
+        {
+          "pregunta": "¿Cómo relacionar un pago con un jugador?",
+          "respuesta": "Ingresa al módulo de Pagos, selecciona el nombre del jugador, elige el concepto (Inscripción o el mes correspondiente de la mensualidad) e ingresa el monto recibido para actualizar su estado a 'Pagado'."
+        }
+      ]
+    },
+    {
+      "id": "expediente-documentos",
+      "titulo": "Expediente Digital de Documentación",
+      "icono": "folder-check",
+      "preguntas": [
+        {
+          "pregunta": "¿Cuáles son los 6 documentos obligatorios por jugador?",
+          "respuesta": "Documentos Personales: 1. Registro civil / Tarjeta de identidad, 2. Certificado EPS, 3. Cédula del acudiente. Documentos Normativos: 4. Hoja de vida, 5. Compromiso de vinculación, 6. Cesión de derechos de imagen."
+        },
+        {
+          "pregunta": "¿Qué significa el indicador 'Documentación Incompleta'?",
+          "respuesta": "Aparecerá en el perfil del jugador cuando le haga falta al menos 1 de los 6 documentos requeridos por la escuela. Haz clic sobre el alerta para ir directo a su expediente y cargar el archivo pendiente."
+        }
+      ]
+    }
+  ]
+}
