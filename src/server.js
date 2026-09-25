@@ -44,17 +44,52 @@ app.get('/health', async (req, res) => {
   }
 });
 
-// 3. Endpoint público para el Centro de Ayuda (RF-11)
+// 3. Endpoint del Centro de Ayuda (RF-11) con filtrado y búsqueda
 app.get('/api/help', (req, res) => {
   try {
+    const { q, categoria } = req.query;
+
+    let resultCategories = helpData.categorias;
+
+    // Filtrar por ID de categoría específica si se proporciona
+    if (categoria) {
+      resultCategories = resultCategories.filter(
+        cat => cat.id.toLowerCase() === categoria.toLowerCase()
+      );
+    }
+
+    // Filtrar por término de búsqueda (q) en preguntas o respuestas
+    if (q) {
+      const searchTerm = q.toLowerCase().trim();
+
+      resultCategories = resultCategories
+        .map(cat => {
+          const matchingQuestions = cat.preguntas.filter(
+            p => p.pregunta.toLowerCase().includes(searchTerm) || 
+                 p.respuesta.toLowerCase().includes(searchTerm)
+          );
+
+          return {
+            ...cat,
+            preguntas: matchingQuestions
+          };
+        })
+        .filter(cat => cat.preguntas.length > 0); // Excluir categorías sin coincidencias
+    }
+
     res.status(200).json({
       success: true,
-      data: helpData
+      modulo: helpData.modulo,
+      version: helpData.version,
+      query: { q: q || null, categoria: categoria || null },
+      totalCategorias: resultCategories.length,
+      data: resultCategories
     });
   } catch (error) {
     res.status(500).json({
       success: false,
-      message: 'Error al obtener la información del Centro de Ayuda'
+      message: 'Error al procesar la información del Centro de Ayuda',
+      error: error.message
     });
   }
 });
