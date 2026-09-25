@@ -54,15 +54,15 @@ Cantera App es un SaaS diseñado para automatizar la gestión administrativa, el
 
 * **RF-08 (Control de Documentos Personales):** Trazabilidad de estado (*Pendiente*, *Cargado*, *Verificado*) para:
 
-- **1.** Registro civil o Tarjeta de identidad.
-- **2.** Certificado de afiliación a la EPS.
-- **3.** Cédula de ciudadanía del acudiente principal.
+    - **1.** Registro civil o Tarjeta de identidad.
+    - **2.** Certificado de afiliación a la EPS.
+    - **3.** Cédula de ciudadanía del acudiente principal.
 
 * **RF-09 (Control de Documentos Normativos del Club):** Trazabilidad de estado para:
 
-- **4.** Hoja de vida del jugador.
-- **5.** Compromiso de vinculación.
-- **6.** Cesión de derechos de imagen.
+    - **4.** Hoja de vida del jugador.
+    - **5.** Compromiso de vinculación.
+    - **6.** Cesión de derechos de imagen.
 
 * **RF-10 (Navegación e Indicador de Expediente Incompleto):** Redirección directa desde el perfil del jugador o la relación de pago hacia su expediente documental, mostrando una alerta o badge visual si le hace falta al menos 1 documento.
 
