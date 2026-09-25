@@ -1,5 +1,6 @@
 import express from 'express';
 import dotenv from 'dotenv';
+import cors from 'cors';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -14,7 +15,8 @@ const port = process.env.PORT || 3000;
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// Middleware
+// Middlewares
+app.use(cors()); // Habilita peticiones entre dominios (CORS)
 app.use(express.json());
 
 // Cargar el archivo JSON del Centro de Ayuda
@@ -51,30 +53,37 @@ app.get('/api/help', (req, res) => {
 
     let resultCategories = helpData.categorias;
 
-    // Filtrar por ID de categoría específica si se proporciona
+    // Filtrar por categoría si se proporciona la query
     if (categoria) {
       resultCategories = resultCategories.filter(
         cat => cat.id.toLowerCase() === categoria.toLowerCase()
       );
     }
 
-    // Filtrar por término de búsqueda (q) en preguntas o respuestas
+    // Filtrar por término de búsqueda (q)
     if (q) {
       const searchTerm = q.toLowerCase().trim();
 
       resultCategories = resultCategories
         .map(cat => {
-          const matchingQuestions = cat.preguntas.filter(
-            p => p.pregunta.toLowerCase().includes(searchTerm) || 
-                 p.respuesta.toLowerCase().includes(searchTerm)
-          );
+          const matchingQuestions = cat.preguntas.filter(p => {
+            // Coincidencia en el texto de la pregunta
+            const matchInQuestion = p.pregunta.toLowerCase().includes(searchTerm);
+            
+            // Coincidencia en alguno de los pasos/instrucciones del arreglo
+            const matchInSteps = Array.isArray(p.pasos) && p.pasos.some(paso => 
+              paso.toLowerCase().includes(searchTerm)
+            );
+
+            return matchInQuestion || matchInSteps;
+          });
 
           return {
             ...cat,
             preguntas: matchingQuestions
           };
         })
-        .filter(cat => cat.preguntas.length > 0); // Excluir categorías sin coincidencias
+        .filter(cat => cat.preguntas.length > 0); // Oculta categorías sin coincidencias
     }
 
     res.status(200).json({
@@ -94,7 +103,7 @@ app.get('/api/help', (req, res) => {
   }
 });
 
-// 4. Servidor en escucha (escuchar en '0.0.0.0' para Hostinger)
+// 4. Servidor en escucha
 app.listen(port, '0.0.0.0', () => {
   console.log(`Servidor de Cantera App listo en el puerto ${port}`);
 });

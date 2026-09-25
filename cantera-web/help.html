@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cantera App - Centro de Ayuda</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Alpine.js CDN -->
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+</head>
+<body class="bg-white text-black min-h-screen p-6 font-sans">
+
+  <main class="max-w-3xl mx-auto" x-data="helpCenter()">
+    
+    <!-- Encabezado -->
+    <header class="border-b-2 border-black pb-4 mb-6">
+      <h1 class="text-2xl font-bold tracking-tight uppercase" x-text="modulo">Centro de Ayuda</h1>
+      <p class="text-xs text-gray-600 mt-1">Versión <span x-text="version">1.0</span></p>
+    </header>
+
+    <!-- Buscador -->
+    <div class="mb-6">
+      <input 
+        type="text" 
+        x-model="searchQuery" 
+        @input.debounce.300ms="fetchHelpData()"
+        placeholder="Buscar en el Centro de Ayuda (ej. mensualidades, expediente)..." 
+        class="w-full p-3 bg-white border border-black text-black placeholder-gray-500 text-sm focus:outline-none focus:ring-1 focus:ring-black"
+      />
+    </div>
+
+    <!-- Indicador de Carga -->
+    <template x-if="loading">
+      <div class="py-8 text-center text-sm text-gray-600 italic">
+        Cargando información...
+      </div>
+    </template>
+
+    <!-- Lista de Categorías y Preguntas -->
+    <template x-if="!loading && categories.length > 0">
+      <div class="space-y-6">
+        <template x-for="category in categories" :key="category.id">
+          <div class="border border-black p-5">
+            
+            <!-- Título de Categoría -->
+            <h2 class="text-base font-bold uppercase tracking-wider mb-4 border-b border-black pb-2" x-text="category.titulo"></h2>
+
+            <!-- Acordeón de Preguntas -->
+            <div class="space-y-3">
+              <template x-for="(faq, index) in category.preguntas" :key="index">
+                <div x-data="{ open: false }" class="border border-gray-400">
+                  <button 
+                    @click="open = !open" 
+                    class="w-full text-left p-3 font-semibold text-sm flex justify-between items-center bg-gray-50 hover:bg-gray-100 transition-colors">
+                    <span x-text="faq.pregunta"></span>
+                    <span class="font-mono text-xs font-bold" x-text="open ? '[-]' : '[+]'"></span>
+                  </button>
+                  <div x-show="open" class="p-4 bg-white text-xs border-t border-gray-300 leading-relaxed text-gray-900">
+                    <ul class="list-disc pl-4 space-y-2">
+                      <template x-for="(paso, pIndex) in faq.pasos" :key="pIndex">
+                        <li x-text="paso"></li>
+                      </template>
+                    </ul>
+                  </div>
+                </div>
+              </template>
+            </div>
+
+          </div>
+        </template>
+      </div>
+    </template>
+
+    <!-- Estado Sin Resultados -->
+    <template x-if="!loading && categories.length === 0">
+      <div class="text-center py-8 border border-black p-4">
+        <p class="text-sm text-gray-600">No se encontraron resultados para tu búsqueda.</p>
+      </div>
+    </template>
+
+  </main>
+
+  <script>
+    document.addEventListener('alpine:init', () => {
+      Alpine.data('helpCenter', () => ({
+        searchQuery: '',
+        categories: [],
+        modulo: 'Centro de Ayuda',
+        version: '',
+        loading: true,
+
+        async init() {
+          await this.fetchHelpData();
+        },
+
+        async fetchHelpData() {
+          this.loading = true;
+          try {
+            const url = this.searchQuery 
+              ? `http://localhost:3000/api/help?q=${encodeURIComponent(this.searchQuery)}`
+              : 'http://localhost:3000/api/help';
+
+            const response = await fetch(url);
+            const result = await response.json();
+
+            if (result.success) {
+              this.categories = result.data;
+              this.modulo = result.modulo || this.modulo;
+              this.version = result.version || '';
+            }
+          } catch (error) {
+            console.error('Error al consultar la API de Ayuda:', error);
+          } finally {
+            this.loading = false;
+          }
+        }
+      }));
+    });
+  </script>
+
+</body>
+</html>

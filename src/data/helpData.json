@@ -9,15 +9,29 @@
       "preguntas": [
         {
           "pregunta": "¿Cuándo se vencen las mensualidades de los jugadores?",
-          "respuesta": "Las mensualidades se deben cancelar durante el primer fin de semana de cada mes. El sistema activará automáticamente una alerta de pago pendiente/vencido el primer lunes hábil posterior a esta fecha."
+          "pasos": [
+            "Plazo de pago: Cancelar durante el primer fin de semana de cada mes.",
+            "Activación de alerta: El sistema marcará la cuenta en estado 'Pendiente/Vencido' el primer lunes hábil posterior.",
+            "Restricción: Jugadores con cartera vencida podrían presentar bloqueos en planillas."
+          ]
         },
         {
           "pregunta": "¿Cuáles son las tarifas según la categoría del jugador?",
-          "respuesta": "Categorías 2022-2023: Mensualidad $80.000 / Inscripción $190.000. Categorías 2021 a 2013-2014: Mensualidad $110.000 / Inscripción $300.000."
+          "pasos": [
+            "Categorías 2022 - 2023: Mensualidad $80.000 / Inscripción $190.000.",
+            "Categorías 2021 a 2013-2014: Mensualidad $110.000 / Inscripción $300.000.",
+            "Métodos de pago: Transferencia bancaria o pago directo en secretaría."
+          ]
         },
         {
           "pregunta": "¿Cómo relacionar un pago con un jugador?",
-          "respuesta": "Ingresa al módulo de Pagos, selecciona el nombre del jugador, elige el concepto (Inscripción o el mes correspondiente de la mensualidad) e ingresa el monto recibido para actualizar su estado a 'Pagado'."
+          "pasos": [
+            "1. Ingresa al módulo 'Pagos' en el menú lateral.",
+            "2. Selecciona el nombre del jugador en el buscador.",
+            "3. Elige el concepto a cancelar (Inscripción o Mes correspondiente).",
+            "4. Digita el monto e ingresa el número de comprobante.",
+            "5. Guarda los cambios para actualizar el estado a 'Pagado'."
+          ]
         }
       ]
     },
@@ -28,11 +42,19 @@
       "preguntas": [
         {
           "pregunta": "¿Cuáles son los 6 documentos obligatorios por jugador?",
-          "respuesta": "Documentos Personales: 1. Registro civil / Tarjeta de identidad, 2. Certificado EPS, 3. Cédula del acudiente. Documentos Normativos: 4. Hoja de vida, 5. Compromiso de vinculación, 6. Cesión de derechos de imagen."
+          "pasos": [
+            "Documentos Personales (3): Registro Civil / Tarjeta Identidad, Certificado de EPS, Cédula del Acudiente.",
+            "Documentos Normativos (3): Hoja de Vida, Compromiso de Vinculación, Cesión de Derechos de Imagen.",
+            "Requisitos de archivo: Formato PDF o JPG/PNG no mayor a 5 MB por documento."
+          ]
         },
         {
           "pregunta": "¿Qué significa el indicador 'Documentación Incompleta'?",
-          "respuesta": "Aparecerá en el perfil del jugador cuando le haga falta al menos 1 de los 6 documentos requeridos por la escuela. Haz clic sobre el alerta para ir directo a su expediente y cargar el archivo pendiente."
+          "pasos": [
+            "Indica que al perfil del deportista le falta al menos 1 de los 6 documentos requeridos.",
+            "Haz clic sobre la alerta en la lista de jugadores para ir directo al expediente.",
+            "Carga el archivo faltante y el sistema validará el estado a 'Completo' automáticamente."
+          ]
         }
       ]
     }
