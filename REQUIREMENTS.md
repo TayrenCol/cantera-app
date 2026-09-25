@@ -66,6 +66,9 @@ Cantera App es un SaaS diseñado para automatizar la gestión administrativa, el
 
 * **RF-10 (Navegación e Indicador de Expediente Incompleto):** Redirección directa desde el perfil del jugador o la relación de pago hacia su expediente documental, mostrando una alerta o badge visual si le hace falta al menos 1 documento.
 
+### **Módulo 4: Centro de Ayuda y Guía de Uso (Autogestión)**
+* **RF-11 (Manual de Usuario Integrado):** El sistema debe incluir una sección accesible de "Centro de Ayuda" con guías paso a paso e instructivos visuales sobre la carga de pagos, actualización del expediente de documentos e interpretación de las alertas de cartera.
+
 ---
 
 ## 3. Requerimientos No Funcionales (RNF)
