@@ -4,26 +4,35 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Cantera App Dashboard</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous" />
     <style>
       * { box-sizing: border-box; }
+      :root {
+        --ink: #17221f;
+        --muted: #52615b;
+        --canvas: #e9efec;
+        --surface: #ffffff;
+        --line: #c8d3ce;
+        --nav: #153a31;
+        --nav-hover: #245648;
+        --nav-active: #d7f36a;
+        --accent: #b9dd39;
+      }
       body {
         margin: 0;
-        font-family: "Trebuchet MS", "Segoe UI", sans-serif;
-        background: #f3f5f0;
-        color: #17251f;
+        font-family: Arial, sans-serif;
+        background: var(--canvas);
+        color: var(--ink);
       }
       .layout {
         display: flex;
         min-height: 100vh;
       }
       .sidebar {
-        --bs-offcanvas-width: 280px;
-        width: 250px;
-        flex: 0 0 250px;
-        background: #173e32;
+        width: 248px;
+        flex: 0 0 248px;
+        background: var(--nav);
         color: white;
-        padding: 22px 16px;
+        padding: 28px 18px;
       }
       .brand {
         font-size: 1.5rem;
@@ -33,76 +42,84 @@
       .nav {
         display: flex;
         flex-direction: column;
-        gap: 12px;
+        gap: 7px;
       }
       .nav a {
-        color: #dbe6df;
+        min-height: 44px;
+        display: flex;
+        align-items: center;
+        color: #f2f7f4;
         text-decoration: none;
-        padding: 10px 12px;
+        padding: 10px 14px;
         border-radius: 5px;
+        border-left: 4px solid transparent;
+        font-weight: 700;
+        transition: background-color 140ms ease, color 140ms ease;
       }
-      .nav a:hover {
-        background: #285545;
-        color: white;
+      .nav a:hover, .nav a:focus-visible {
+        background: var(--nav-hover);
+        outline: none;
+      }
+      .nav a.active {
+        color: #20321a;
+        background: var(--nav-active);
+        border-left-color: #a2c72c;
       }
       .main {
         flex: 1;
         min-width: 0;
-        padding: 30px clamp(16px, 3vw, 38px);
+        padding: 32px;
       }
       .header {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        margin-bottom: 22px;
+        margin-bottom: 24px;
       }
-      .help-link {
-        display: inline-flex;
-        align-items: center;
-        padding: 10px 14px;
-        border-radius: 6px;
-        background: #176b52;
-        color: white;
-        font-weight: 600;
-        text-decoration: none;
-      }
-      .help-link:hover { background: #10533f; }
       .cards {
-        --bs-gutter-y: 1rem;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: 18px;
         margin-bottom: 24px;
       }
       .card {
-        height: 100%;
-        border: 1px solid #e0e5dd;
-        border-radius: 6px;
-        padding: 16px;
-        box-shadow: 0 3px 12px rgba(29, 47, 35, 0.04);
+        background: var(--surface);
+        border: 1px solid var(--line);
+        border-top: 4px solid var(--accent);
+        border-radius: 5px;
+        padding: 18px;
+        box-shadow: 0 2px 5px rgba(21, 58, 49, 0.07);
       }
       .card h3 {
         margin: 0 0 12px;
         font-size: 0.9rem;
-        color: #64716a;
+        color: var(--muted);
       }
       .card .value {
-        font-size: 1.55rem;
+        font-size: 1.8rem;
         font-weight: bold;
       }
       .content {
-        --bs-gutter-y: 1rem;
+        display: grid;
+        grid-template-columns: 1.5fr 1fr;
+        gap: 24px;
       }
       .view { display: none; }
       .view.active { display: block; }
       .toolbar { display: flex; gap: 10px; margin-bottom: 16px; }
-      .toolbar input, .toolbar select, button { padding: 9px 12px; border: 1px solid #d1d5db; border-radius: 6px; background: white; }
-      .toolbar button, button { cursor: pointer; }
-      .muted { color: #6b7280; }
+      .toolbar input, .toolbar select, button { min-height: 42px; padding: 9px 12px; border: 1px solid #81918a; border-radius: 5px; background: white; color: var(--ink); }
+      .toolbar button, button { cursor: pointer; font-weight: 700; }
+      button { border-color: var(--nav); background: var(--nav); color: white; }
+      button:hover { background: var(--nav-hover); }
+      button:focus-visible, input:focus-visible, select:focus-visible { outline: 3px solid #9bbd22; outline-offset: 2px; }
+      .muted { color: var(--muted); }
       .table-wrap { overflow-x: auto; }
       .panel {
-        background: #fffefa;
-        border: 1px solid #e0e5dd;
-        border-radius: 6px;
+        background: var(--surface);
+        border: 1px solid var(--line);
+        border-radius: 5px;
         padding: 18px;
-        box-shadow: 0 3px 12px rgba(29, 47, 35, 0.04);
+        box-shadow: 0 2px 5px rgba(21, 58, 49, 0.07);
       }
       table {
         width: 100%;
@@ -112,7 +129,29 @@
       th, td {
         text-align: left;
         padding: 10px 8px;
-        border-bottom: 1px solid #e5e7df;
+        border-bottom: 1px solid var(--line);
+      }
+      th {
+        color: #ffffff;
+        background: #285447;
+        font-size: 0.83rem;
+        letter-spacing: 0;
+      }
+      tbody tr:nth-child(even) { background: #f1f6f3; }
+      tbody tr:hover { background: #e3efbe; }
+      @media (max-width: 900px) {
+        .sidebar { width: 208px; flex-basis: 208px; }
+        .main { padding: 24px; }
+        .content { grid-template-columns: 1fr; }
+      }
+      @media (max-width: 640px) {
+        .layout { display: block; }
+        .sidebar { width: 100%; padding: 14px; }
+        .brand { margin: 0 0 12px; }
+        .nav { flex-direction: row; overflow-x: auto; }
+        .nav a { flex: 0 0 auto; }
+        .main { padding: 18px 14px; }
+        .toolbar { flex-wrap: wrap; }
       }
       .badge {
         display: inline-block;
@@ -128,104 +167,33 @@
         padding-left: 18px;
       }
       li { margin-bottom: 10px; }
-      .toolbar { flex-wrap: wrap; align-items: center; }
-      .toolbar-spacer { flex: 1; }
-      .primary-button { border-color: #176b52; background: #176b52; color: #fff; font-weight: 700; }
-      .primary-button:hover { border-color: #10533f; background: #10533f; }
-      .table-action { padding: 6px 9px; border-radius: 5px; color: #0f766e; font-size: .8rem; font-weight: 700; }
-      .table-action:disabled { color: #6b7280; cursor: default; }
-      .modal { width: min(620px, calc(100% - 28px)); max-height: min(88vh, 820px); padding: 0; border: 0; border-radius: 10px; box-shadow: 0 24px 80px #11182755; }
-      .modal::backdrop { background: #11182788; }
-      .modal-form { padding: 24px; }
-      .modal-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 14px; margin-bottom: 20px; }
-      .modal-header h2 { margin: 0 0 5px; font-size: 1.3rem; }
-      .modal-header p { margin: 0; color: #6b7280; font-size: .85rem; }
-      .close-button { padding: 4px 9px; border: 0; background: transparent; color: #6b7280; font-size: 1.5rem; }
-      .form-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
-      .field { display: grid; gap: 6px; min-width: 0; }
-      .field.full { grid-column: 1 / -1; }
-      .field label { color: #374151; font-size: .8rem; font-weight: 700; }
-      .field input, .field select { width: 100%; min-height: 40px; padding: 8px 10px; border: 1px solid #d1d5db; border-radius: 5px; background: #fff; }
-      .form-hint { margin: 0; color: #6b7280; font-size: .75rem; line-height: 1.45; }
-      .modal-actions { display: flex; justify-content: flex-end; gap: 9px; margin-top: 22px; }
-      .modal-actions button { min-height: 38px; }
-      .document-list { display: grid; gap: 0; max-height: 55vh; overflow-y: auto; }
-      .document-row { display: grid; grid-template-columns: minmax(0, 1fr) 150px; gap: 12px; align-items: center; padding: 12px 0; border-bottom: 1px solid #e5e7eb; }
-      .document-row strong { display: block; font-size: .85rem; }
-      .document-row small { color: #6b7280; font-size: .72rem; }
-      .document-row select { width: 100%; min-height: 36px; padding: 6px; border: 1px solid #d1d5db; border-radius: 5px; background: white; }
-      .document-retention { grid-column: 1 / -1; color: #6b7280; font-size: .7rem; }
-      .modal-error { margin: 12px 0 0; color: #991b1b; font-size: .82rem; }
-      .view-summary { margin: 0 0 15px; }
-      .row-muted { color: #6b7280; font-size: .78rem; }
-      .sidebar .brand { display: flex; align-items: center; gap: 10px; margin: 0 0 30px; }
-      .brand-mark { display: grid; width: 34px; height: 34px; place-items: center; border-radius: 9px 9px 9px 2px; background: #c9e66b; color: #173e32; font-size: 17px; }
-      .sidebar .nav { display: grid; }
-      .sidebar .nav-link.active { background: #285545; color: #fff; }
-      .nav-divider { margin: 18px 8px 8px; color: #a9c1b2; font-size: .68rem; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; }
-      .dashboard-header { gap: 14px; }
-      .dashboard-header h1 { margin: 0; font-size: clamp(1.5rem, 2vw, 2rem); font-weight: 750; }
-      .menu-button { display: none; }
-      .table { --bs-table-bg: transparent; --bs-table-color: #26362e; --bs-table-border-color: #e5e7df; vertical-align: middle; }
-      .table thead th { color: #65736a; font-size: .72rem; letter-spacing: .04em; text-transform: uppercase; white-space: nowrap; }
-      .table td { font-size: .84rem; }
-      .form-control, .form-select { border-color: #d4dcd3; }
-      .form-control:focus, .form-select:focus { border-color: #6eaa91; box-shadow: 0 0 0 .2rem #176b5220; }
-      .btn { border-radius: 5px; }
-      .btn-success, .btn-success:hover { border-color: #176b52; background-color: #176b52; }
-      .policy-link { margin-top: 4px; color: #c9d8ce !important; font-size: .8rem; }
-      @media (max-width: 700px) {
-        .layout { display: block; min-height: 0; }
-        .sidebar { width: 280px; padding: 20px 16px; }
-        .main { padding: 20px 14px; }
-        .dashboard-header { align-items: center; flex-wrap: wrap; }
-        .header { align-items: center; gap: 10px; }
-        .menu-button { display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; padding: 0; border: 1px solid #d4dcd3; background: #fffefa; }
-        .cards { --bs-gutter-y: .75rem; }
-        .panel { padding: 14px; }
-        .form-grid { grid-template-columns: 1fr; }
-        .field.full { grid-column: auto; }
-      }
-      @media (min-width: 701px) and (max-width: 991.98px) {
-        .main { padding: 24px 20px; }
-        .card { padding: 14px; }
-        .card .value { font-size: 1.35rem; }
-        .menu-button { display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; padding: 0; border: 1px solid #d4dcd3; background: #fffefa; }
-      }
     </style>
   </head>
   <body>
-    <div class="layout d-lg-flex min-vh-100">
-      <aside class="sidebar offcanvas-lg offcanvas-start" tabindex="-1" id="sidebarNavigation" aria-labelledby="sidebarTitle">
-        <div class="offcanvas-header p-0 mb-4">
-          <div class="brand" id="sidebarTitle"><span class="brand-mark" aria-hidden="true">C</span>Cantera</div>
-          <button type="button" class="btn-close btn-close-white d-lg-none" data-bs-dismiss="offcanvas" data-bs-target="#sidebarNavigation" aria-label="Cerrar navegación"></button>
-        </div>
-        <nav class="nav flex-column">
-          <a class="nav-link active" href="#dashboard" data-view="dashboard">Resumen general</a>
-          <a class="nav-link" href="#players" data-view="players">Jugadores</a>
-          <a class="nav-link" href="#retired" data-view="retired">Retirados</a>
-          <a class="nav-link" href="#payments" data-view="payments">Mensualidades</a>
-          <a class="nav-link" href="#uniforms" data-view="uniforms">Uniformes</a>
-          <span class="nav-divider">Información</span>
-          <a class="nav-link" href="/politica-datos.html">Protección de datos</a>
+    <div class="layout">
+      <aside class="sidebar">
+        <div class="brand">Cantera</div>
+        <nav class="nav">
+          <a href="#dashboard" data-view="dashboard">Dashboard</a>
+          <a href="#players" data-view="players">Jugadores</a>
+          <a href="#retired" data-view="retired">Retirados</a>
+          <a href="#payments" data-view="payments">Mensualidades</a>
+          <a href="#uniforms" data-view="uniforms">Uniformes</a>
         </nav>
       </aside>
 
-      <main class="main container-fluid">
-        <div class="header dashboard-header">
-          <button class="menu-button rounded d-lg-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebarNavigation" aria-controls="sidebarNavigation" aria-label="Abrir navegación"><span aria-hidden="true">☰</span></button>
+      <main class="main">
+        <div class="header">
           <h1 id="page-title">Dashboard</h1>
-          <a class="help-link ms-auto" href="/help.html">Centro de ayuda</a>
         </div>
 
         <section id="dashboard-view" class="view active">
-          <section id="stats" class="cards row row-cols-2 row-cols-md-3 row-cols-xl-6"></section>
+          <section id="stats" class="cards"></section>
 
-          <div class="content row">
-          <section class="panel col-lg-8">
+          <div class="content">
+          <section class="panel">
             <h2>Pagos recientes</h2>
-            <div class="table-responsive"><table class="table table-sm mb-0">
+            <table>
               <thead>
                 <tr>
                   <th>Alumno</th>
@@ -235,10 +203,10 @@
                 </tr>
               </thead>
               <tbody id="payments"></tbody>
-            </table></div>
+            </table>
           </section>
 
-          <section class="panel col-lg-4">
+          <section class="panel">
             <h2>Alertas</h2>
             <ul id="alerts"></ul>
           </section>
@@ -246,261 +214,125 @@
         </section>
 
         <section id="players-view" class="view panel">
-          <div class="toolbar"><input class="form-control w-auto flex-grow-1" id="player-search" placeholder="Buscar jugador, documento o registro"><button class="btn btn-outline-secondary" id="player-search-button">Buscar</button><span class="toolbar-spacer"></span><button id="new-player-button" class="btn btn-success primary-button">+ Nuevo jugador</button></div>
-          <div class="table-wrap table-responsive"><table class="table table-hover"><thead><tr><th>Nombre</th><th>Registro</th><th>Categoría</th><th>Año nacimiento</th><th>Estado</th><th>Acudiente</th><th>Acciones</th></tr></thead><tbody id="players-table"></tbody></table></div>
+          <div class="toolbar"><input id="player-search" placeholder="Buscar jugador, documento o registro"><button id="player-search-button">Buscar</button></div>
+          <div class="table-wrap"><table><thead><tr><th>Nombre</th><th>Registro</th><th>Año nacimiento</th><th>Estado</th><th>Uniforme</th><th>Acudiente</th><th>Acción</th></tr></thead><tbody id="players-table"></tbody></table></div>
           <p id="players-total" class="muted"></p>
         </section>
 
         <section id="payments-view" class="view panel">
-          <div class="toolbar"><select class="form-select w-auto" id="payment-month"></select><button class="btn btn-outline-secondary" id="payment-refresh">Actualizar</button><span class="toolbar-spacer"></span><span id="payment-period-summary" class="row-muted"></span></div>
-          <div class="table-wrap table-responsive"><table class="table table-hover"><thead><tr><th>Jugador</th><th>Periodo</th><th>Monto</th><th>Estado</th><th>Comprobante</th><th>Acción</th></tr></thead><tbody id="payments-table"></tbody></table></div>
-          <p class="form-hint">El valor mensual se calcula desde la categoría del jugador. Los pagos de inscripción se gestionan por separado.</p>
+          <div class="toolbar"><select id="payment-month"></select><button id="payment-refresh">Actualizar</button></div>
+          <div class="table-wrap"><table><thead><tr><th>Jugador</th><th>Periodo</th><th>Estado</th><th>Fecha de pago</th></tr></thead><tbody id="payments-table"></tbody></table></div>
         </section>
 
         <section id="uniforms-view" class="view panel">
-          <div class="toolbar"><button class="btn btn-outline-secondary" id="uniform-refresh">Actualizar</button></div>
-          <div class="table-wrap table-responsive"><table class="table table-hover"><thead><tr><th>Jugador</th><th>Azul</th><th>Gris</th><th>Torneo 1</th><th>Torneo 2</th></tr></thead><tbody id="uniforms-table"></tbody></table></div>
+          <div class="toolbar"><button id="uniform-refresh">Actualizar</button></div>
+          <div class="table-wrap"><table><thead><tr><th>Jugador</th><th>Azul</th><th>Gris</th><th>Torneo 1</th><th>Torneo 2</th></tr></thead><tbody id="uniforms-table"></tbody></table></div>
         </section>
       </main>
     </div>
 
-    <dialog id="player-dialog" class="modal">
-      <form id="player-form" class="modal-form">
-        <header class="modal-header"><div><h2>Registrar jugador</h2><p>La categoría se valida con el año de nacimiento.</p></div><button class="close-button" type="button" data-close="player-dialog" aria-label="Cerrar">×</button></header>
-        <div class="form-grid">
-          <div class="field full"><label for="new-player-name">Nombre completo</label><input id="new-player-name" name="name" required maxlength="150"></div>
-          <div class="field"><label for="new-player-document">Documento</label><input id="new-player-document" name="documentNumber" maxlength="40"></div>
-          <div class="field"><label for="new-player-registration">Número de registro</label><input id="new-player-registration" name="registrationNumber" maxlength="40"></div>
-          <div class="field"><label for="new-player-birth-year">Año de nacimiento</label><input id="new-player-birth-year" name="birthYear" type="number" min="2000" max="2026" required></div>
-          <div class="field"><label for="new-player-category">Categoría</label><select id="new-player-category" name="category" required><option value="">Selecciona categoría</option><option>2022-2023</option><option>2021</option><option>2020</option><option>2019</option><option>2017-2018 A</option><option>2017-2018 B</option><option>2016</option><option>2015</option><option>2013-2014</option></select></div>
-          <div class="field"><label for="new-mother-name">Nombre acudiente principal</label><input id="new-mother-name" name="motherName" maxlength="150"></div>
-          <div class="field"><label for="new-mother-phone">Teléfono acudiente principal</label><input id="new-mother-phone" name="motherPhone" maxlength="40"></div>
-          <p class="form-hint full">Para 2017-2018 selecciona A o B según la asignación deportiva de la cantera.</p>
-        </div>
-        <p id="player-form-error" class="modal-error" role="alert" hidden></p>
-        <div class="modal-actions"><button type="button" data-close="player-dialog">Cancelar</button><button class="primary-button" type="submit">Crear ficha</button></div>
-      </form>
-    </dialog>
-
-    <dialog id="documents-dialog" class="modal">
-      <form id="documents-form" class="modal-form">
-        <header class="modal-header"><div><h2 id="documents-title">Expediente digital</h2><p id="documents-player-name"></p></div><button class="close-button" type="button" data-close="documents-dialog" aria-label="Cerrar">×</button></header>
-        <div id="documents-list" class="document-list"></div>
-        <p class="form-hint">Los archivos no se guardan en MySQL: deben alojarse en almacenamiento privado externo y conservarse mientras el jugador siga activo. Al renovar un documento se conserva una nueva versión; al cumplir la mayoría de edad, revisa y actualiza los consentimientos según la normativa aplicable.</p>
-        <p id="documents-form-error" class="modal-error" role="alert" hidden></p>
-        <div class="modal-actions"><button type="button" data-close="documents-dialog">Cerrar</button><button class="primary-button" type="submit">Guardar estados</button></div>
-      </form>
-    </dialog>
-
-    <dialog id="payment-dialog" class="modal">
-      <form id="payment-form" class="modal-form">
-        <header class="modal-header"><div><h2>Registrar mensualidad</h2><p id="payment-player-name"></p></div><button class="close-button" type="button" data-close="payment-dialog" aria-label="Cerrar">×</button></header>
-        <div class="form-grid">
-          <div class="field"><label for="payment-amount">Valor calculado</label><input id="payment-amount" readonly></div>
-          <div class="field"><label for="payment-receipt">Número de comprobante</label><input id="payment-receipt" maxlength="100" required></div>
-        </div>
-        <p id="payment-form-error" class="modal-error" role="alert" hidden></p>
-        <div class="modal-actions"><button type="button" data-close="payment-dialog">Cancelar</button><button class="primary-button" type="submit">Confirmar pago</button></div>
-      </form>
-    </dialog>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     <script>
-      const monthNames = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
-      const currentYear = new Date().getFullYear();
-      const currentMonth = new Date().getMonth() + 1;
-      let currentPlayerStatus = 'active';
-      let selectedPlayer = null;
-      let selectedPayment = null;
-
-      const escapeHtml = value => String(value ?? '').replace(/[&<>"']/g, character => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[character]);
-      const money = value => value === null || value === undefined ? '—' : `$${Number(value).toLocaleString('es-CO')}`;
-      const request = async (url, options = {}) => {
-        const response = await fetch(url, options);
-        const data = await response.json();
-        if (!response.ok) throw new Error(data.message || 'No se pudo completar la operación');
-        return data;
-      };
-
       async function loadDashboard() {
-        const data = await request(`/api/dashboard/overview?year=${currentYear}&month=${currentMonth}`);
+        const response = await fetch('/api/dashboard/overview');
+        const data = await response.json();
+
+        const stats = document.getElementById('stats');
         const cards = [
           { label: 'Total alumnos', value: data.stats.totalStudents },
           { label: 'Activos', value: data.stats.activeStudents },
+          { label: 'Retirados', value: data.stats.retiredStudents },
           { label: 'Mensualidades pagadas', value: data.stats.paidPayments },
           { label: 'Mensualidades pendientes', value: data.stats.pendingPayments },
-          { label: 'Ingresos del mes', value: money(data.stats.monthlyIncome) },
+          { label: 'Con uniforme', value: data.stats.playersWithUniform },
+          { label: 'Sin uniforme', value: data.stats.playersWithoutUniform },
           { label: 'Sin acudiente completo', value: data.stats.playersWithoutGuardianContact },
         ];
-        document.getElementById('stats').innerHTML = cards.map(card => `<div class="col"><div class="card"><h3>${escapeHtml(card.label)}</h3><div class="value">${escapeHtml(card.value)}</div></div></div>`).join('');
-        document.getElementById('payments').innerHTML = data.recentPayments.map(item => `
-          <tr><td>${escapeHtml(item.student)}</td><td>${escapeHtml(item.concept)}</td><td>${money(item.amount)}</td>
-          <td><span class="badge ${item.status === 'Pagado' ? 'paid' : 'pending'}">${escapeHtml(item.status)}</span></td></tr>`).join('');
-        document.getElementById('alerts').innerHTML = data.alerts.length ? data.alerts.map(item => `<li>${escapeHtml(item)}</li>`).join('') : '<li>Sin alertas prioritarias en este periodo.</li>';
+
+        stats.innerHTML = cards.map(card => `
+          <div class="card">
+            <h3>${card.label}</h3>
+            <div class="value">${card.value}</div>
+          </div>
+        `).join('');
+
+        const payments = document.getElementById('payments');
+        payments.innerHTML = data.recentPayments.map(item => `
+          <tr>
+            <td>${item.student}</td>
+            <td>${item.concept}</td>
+            <td>${item.amount === null ? 'Sin monto' : `$${item.amount.toLocaleString()}`}</td>
+            <td><span class="badge ${item.status === 'Pagado' ? 'paid' : 'pending'}">${item.status}</span></td>
+          </tr>
+        `).join('');
+
+        const alerts = document.getElementById('alerts');
+        alerts.innerHTML = data.alerts.map(item => `<li>${item}</li>`).join('');
       }
 
+      const monthNames = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+      const currentYear = new Date().getFullYear();
+      const currentMonth = new Date().getMonth() + 1;
       document.getElementById('payment-month').innerHTML = monthNames.map((name, index) => `<option value="${index + 1}" ${index + 1 === currentMonth ? 'selected' : ''}>${name} ${currentYear}</option>`).join('');
+
+      let currentPlayerStatus = 'active';
 
       async function loadPlayers(status = currentPlayerStatus) {
         currentPlayerStatus = status;
-        const search = encodeURIComponent(document.getElementById('player-search').value.trim());
-        const data = await request(`/api/dashboard/players?status=${status}&search=${search}&limit=100`);
-        document.getElementById('players-table').innerHTML = data.rows.map(player => `
-          <tr>
-            <td>${escapeHtml(player.name)}</td><td>${escapeHtml(player.registrationNumber || '—')}</td>
-            <td>${escapeHtml(player.category || 'Sin asignar')}</td><td>${escapeHtml(player.birthYear || '—')}</td>
-            <td>${escapeHtml(player.enrollmentStatus || '—')}</td>
-            <td><span class="badge ${player.hasGuardianContact ? 'paid' : 'critical'}">${player.hasGuardianContact ? 'Completo' : 'Falta información'}</span></td>
-            <td><button class="table-action" data-guardian-id="${player.id}">${player.hasGuardianContact ? 'Acudiente' : 'Completar acudiente'}</button><button class="table-action" data-documents-id="${player.id}" data-player-name="${escapeHtml(player.name)}">Expediente</button></td>
-          </tr>`).join('');
+        const search = encodeURIComponent(document.getElementById('player-search').value);
+        const data = await fetch(`/api/dashboard/players?status=${status}&search=${search}&limit=100`).then(response => response.json());
+        document.getElementById('players-table').innerHTML = data.rows.map(player => `<tr><td>${player.name}</td><td>${player.registrationNumber || '-'}</td><td>${player.birthYear || '-'}</td><td>${player.enrollmentStatus || '-'}</td><td>${player.hasUniform ? 'Sí' : 'No'}</td><td><span class="badge ${player.hasGuardianContact ? 'paid' : 'critical'}">${player.hasGuardianContact ? 'Completo' : 'Falta información'}</span></td><td><button data-guardian-id="${player.id}">${player.hasGuardianContact ? 'Editar' : 'Completar'}</button></td></tr>`).join('');
         document.getElementById('players-total').textContent = `${data.total} jugadores encontrados`;
       }
 
       async function loadPayments() {
-        const month = Number(document.getElementById('payment-month').value);
-        const data = await request(`/api/dashboard/payments?year=${currentYear}&month=${month}&limit=100`);
-        const pending = data.filter(payment => payment.paymentStatus !== 'Pagado').length;
-        document.getElementById('payment-period-summary').textContent = `${data.length} jugadores · ${pending} mensualidades pendientes`;
-        document.getElementById('payments-table').innerHTML = data.map(payment => {
-          const amount = payment.amount ?? (payment.category === '2022-2023' ? 80000 : 110000);
-          const paid = payment.paymentStatus === 'Pagado';
-          return `<tr>
-            <td>${escapeHtml(payment.playerName)}<div class="row-muted">${escapeHtml(payment.category || 'Categoría sin asignar')}</div></td>
-            <td>${month}/${currentYear}</td><td>${money(amount)}</td>
-            <td><span class="badge ${paid ? 'paid' : 'pending'}">${paid ? 'Pagado' : 'Pendiente'}</span></td>
-            <td>${escapeHtml(payment.receiptNumber || '—')}${payment.paymentDate ? `<div class="row-muted">${new Date(payment.paymentDate).toLocaleDateString()}</div>` : ''}</td>
-            <td><button class="table-action" data-payment-id="${payment.playerId}" data-payment-name="${escapeHtml(payment.playerName)}" data-payment-category="${escapeHtml(payment.category || '')}" data-payment-receipt="${escapeHtml(payment.receiptNumber || '')}">${paid ? 'Editar registro' : 'Registrar pago'}</button></td>
-          </tr>`;
-        }).join('');
+        const month = document.getElementById('payment-month').value;
+        const data = await fetch(`/api/dashboard/payments?year=${currentYear}&month=${month}&limit=100`).then(response => response.json());
+        document.getElementById('payments-table').innerHTML = data.map(payment => `<tr><td>${payment.playerName}</td><td>${payment.month}/${payment.year}</td><td><span class="badge ${['OK', '$'].includes(payment.paymentStatus) ? 'paid' : 'pending'}">${payment.paymentStatus || 'Pendiente'}</span></td><td>${payment.paymentDate ? new Date(payment.paymentDate).toLocaleDateString() : '-'}</td></tr>`).join('');
       }
 
       async function loadUniforms() {
-        const data = await request(`/api/dashboard/uniforms?year=${currentYear}&limit=100`);
-        document.getElementById('uniforms-table').innerHTML = data.map(uniform => `<tr><td>${escapeHtml(uniform.playerName)}</td><td>${escapeHtml(uniform.blueUniform || '—')}</td><td>${escapeHtml(uniform.grayUniform || '—')}</td><td>${escapeHtml(uniform.tournamentOne || '—')}</td><td>${escapeHtml(uniform.tournamentTwo || '—')}</td></tr>`).join('');
+        const data = await fetch(`/api/dashboard/uniforms?year=${currentYear}&limit=100`).then(response => response.json());
+        document.getElementById('uniforms-table').innerHTML = data.map(uniform => `<tr><td>${uniform.playerName}</td><td>${uniform.blueUniform || '-'}</td><td>${uniform.grayUniform || '-'}</td><td>${uniform.tournamentOne || '-'}</td><td>${uniform.tournamentTwo || '-'}</td></tr>`).join('');
       }
 
       function showView(view) {
         document.querySelectorAll('.view').forEach(element => element.classList.remove('active'));
+        document.querySelectorAll('[data-view]').forEach(link => link.classList.toggle('active', link.dataset.view === view));
         const targetView = view === 'retired' ? 'players' : view;
         document.getElementById(`${targetView}-view`).classList.add('active');
         document.getElementById('page-title').textContent = { dashboard: 'Dashboard', players: 'Jugadores activos', retired: 'Jugadores retirados', payments: 'Mensualidades', uniforms: 'Uniformes' }[view];
-        document.getElementById('new-player-button').hidden = view !== 'players';
-        if (view === 'players' || view === 'retired') loadPlayers(view === 'retired' ? 'retired' : 'active').catch(error => alert(error.message));
-        if (view === 'payments') loadPayments().catch(error => alert(error.message));
-        if (view === 'uniforms') loadUniforms().catch(error => alert(error.message));
+        if (view === 'players') loadPlayers('active');
+        if (view === 'retired') loadPlayers('retired');
+        if (view === 'payments') loadPayments();
+        if (view === 'uniforms') loadUniforms();
       }
 
-      document.querySelectorAll('[data-view]').forEach(link => link.addEventListener('click', event => {
-        event.preventDefault();
-        document.querySelectorAll('[data-view]').forEach(item => item.classList.toggle('active', item === link));
-        showView(link.dataset.view);
-        const navigation = document.getElementById('sidebarNavigation');
-        if (window.bootstrap && window.matchMedia('(max-width: 991.98px)').matches) bootstrap.Offcanvas.getInstance(navigation)?.hide();
-      }));
-      document.getElementById('player-search-button').addEventListener('click', () => loadPlayers(currentPlayerStatus).catch(error => alert(error.message)));
-      document.getElementById('player-search').addEventListener('keydown', event => { if (event.key === 'Enter') loadPlayers(currentPlayerStatus).catch(error => alert(error.message)); });
-      document.getElementById('new-player-button').addEventListener('click', () => document.getElementById('player-dialog').showModal());
-      document.getElementById('payment-month').addEventListener('change', () => loadPayments().catch(error => alert(error.message)));
-      document.getElementById('payment-refresh').addEventListener('click', () => loadPayments().catch(error => alert(error.message)));
-      document.getElementById('uniform-refresh').addEventListener('click', () => loadUniforms().catch(error => alert(error.message)));
-      document.querySelectorAll('[data-close]').forEach(button => button.addEventListener('click', () => document.getElementById(button.dataset.close).close()));
-
-      document.getElementById('new-player-birth-year').addEventListener('input', event => {
-        const year = Number(event.target.value);
-        const categoryByYear = { 2022: '2022-2023', 2023: '2022-2023', 2021: '2021', 2020: '2020', 2019: '2019', 2016: '2016', 2015: '2015', 2014: '2013-2014', 2013: '2013-2014' };
-        document.getElementById('new-player-category').value = categoryByYear[year] || '';
-      });
-
-      document.getElementById('player-form').addEventListener('submit', async event => {
-        event.preventDefault();
-        const form = event.currentTarget;
-        const error = document.getElementById('player-form-error');
-        error.hidden = true;
-        const body = Object.fromEntries(new FormData(form));
-        try {
-          await request('/api/dashboard/players', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
-          form.reset();
-          document.getElementById('player-dialog').close();
-          await Promise.all([loadPlayers(), loadDashboard()]);
-        } catch (failure) { error.textContent = failure.message; error.hidden = false; }
-      });
-
+      document.querySelectorAll('[data-view]').forEach(link => link.addEventListener('click', event => { event.preventDefault(); showView(link.dataset.view); }));
+      document.querySelector('[data-view="dashboard"]').classList.add('active');
+      document.getElementById('player-search-button').addEventListener('click', () => loadPlayers(currentPlayerStatus));
       document.getElementById('players-table').addEventListener('click', async event => {
-        const button = event.target.closest('button');
+        const button = event.target.closest('[data-guardian-id]');
         if (!button) return;
-        try {
-          if (button.dataset.guardianId) {
-            const data = await request(`/api/dashboard/players?status=${currentPlayerStatus}&search=${button.dataset.guardianId}&limit=100`);
-            const player = data.rows.find(item => String(item.id) === button.dataset.guardianId);
-            if (!player) return;
-            const motherName = prompt('Nombre de la acudiente/mamá:', player.motherName || '');
-            if (motherName === null) return;
-            const motherPhone = prompt('Teléfono de la acudiente/mamá:', player.motherPhone || '');
-            if (motherPhone === null) return;
-            const fatherName = prompt('Nombre del acudiente/papá (opcional):', player.fatherName || '');
-            if (fatherName === null) return;
-            const fatherPhone = prompt('Teléfono del acudiente/papá (opcional):', player.fatherPhone || '');
-            if (fatherPhone === null) return;
-            await request(`/api/dashboard/players/${player.id}/guardians`, { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ motherName, motherPhone, fatherName, fatherPhone }) });
-            await loadPlayers();
-          }
-          if (button.dataset.documentsId) await openDocuments(button.dataset.documentsId, button.dataset.playerName);
-        } catch (error) { alert(error.message); }
+        const data = await fetch(`/api/dashboard/players?status=${currentPlayerStatus}&search=${button.dataset.guardianId}&limit=100`).then(response => response.json());
+        const player = data.rows.find(item => String(item.id) === button.dataset.guardianId);
+        if (!player) return;
+        const motherName = prompt('Nombre de la acudiente/mamá:', player.motherName || '');
+        if (motherName === null) return;
+        const motherPhone = prompt('Teléfono de la acudiente/mamá:', player.motherPhone || '');
+        if (motherPhone === null) return;
+        const fatherName = prompt('Nombre del acudiente/papá (opcional):', player.fatherName || '');
+        if (fatherName === null) return;
+        const fatherPhone = prompt('Teléfono del acudiente/papá (opcional):', player.fatherPhone || '');
+        if (fatherPhone === null) return;
+        const response = await fetch(`/api/dashboard/players/${player.id}/guardians`, { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ motherName, motherPhone, fatherName, fatherPhone }) });
+        const result = await response.json();
+        if (!response.ok) return alert(result.message || 'No se pudieron guardar los datos');
+        await loadPlayers();
+        alert('Datos del acudiente actualizados correctamente');
       });
-
-      async function openDocuments(playerId, playerName) {
-        selectedPlayer = playerId;
-        const result = await request(`/api/dashboard/players/${playerId}/documents`);
-        document.getElementById('documents-player-name').textContent = playerName;
-        document.getElementById('documents-list').innerHTML = result.documents.map(document => `
-          <label class="document-row"><span><strong>${escapeHtml(document.label)}</strong><small>${escapeHtml(document.group)}</small></span>
-            <select name="${escapeHtml(document.id)}" aria-label="Estado: ${escapeHtml(document.label)}">
-              ${['Pendiente', 'Cargado', 'Verificado'].map(status => `<option ${document.status === status ? 'selected' : ''}>${status}</option>`).join('')}
-            </select>
-            <small class="document-retention">Versión ${Number(document.version) || 1}${document.retainUntil ? ` · Retener hasta ${escapeHtml(new Date(document.retainUntil).toLocaleDateString())}` : ' · Vigente mientras el jugador esté activo'}</small>
-          </label>`).join('');
-        document.getElementById('documents-dialog').showModal();
-      }
-
-      document.getElementById('documents-form').addEventListener('submit', async event => {
-        event.preventDefault();
-        const error = document.getElementById('documents-form-error');
-        error.hidden = true;
-        const updates = [...event.currentTarget.querySelectorAll('select')].map(select => request(`/api/dashboard/players/${selectedPlayer}/documents/${encodeURIComponent(select.name)}`, {
-          method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ status: select.value }),
-        }));
-        try {
-          await Promise.all(updates);
-          document.getElementById('documents-dialog').close();
-          await loadDashboard();
-        } catch (failure) { error.textContent = failure.message; error.hidden = false; }
-      });
-
-      document.getElementById('payments-table').addEventListener('click', event => {
-        const button = event.target.closest('[data-payment-id]');
-        if (!button) return;
-        selectedPayment = { playerId: Number(button.dataset.paymentId), name: button.dataset.paymentName, category: button.dataset.paymentCategory };
-        const amount = selectedPayment.category === '2022-2023' ? 80000 : 110000;
-        document.getElementById('payment-player-name').textContent = `${selectedPayment.name} · ${document.getElementById('payment-month').selectedOptions[0].textContent}`;
-        document.getElementById('payment-amount').value = money(amount);
-        document.getElementById('payment-receipt').value = button.dataset.paymentReceipt;
-        document.getElementById('payment-form-error').hidden = true;
-        document.getElementById('payment-dialog').showModal();
-      });
-
-      document.getElementById('payment-form').addEventListener('submit', async event => {
-        event.preventDefault();
-        const error = document.getElementById('payment-form-error');
-        error.hidden = true;
-        const month = Number(document.getElementById('payment-month').value);
-        try {
-          await request('/api/dashboard/payments', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ playerId: selectedPayment.playerId, year: currentYear, month, receiptNumber: document.getElementById('payment-receipt').value.trim() }) });
-          document.getElementById('payment-dialog').close();
-          await Promise.all([loadPayments(), loadDashboard()]);
-        } catch (failure) { error.textContent = failure.message; error.hidden = false; }
-      });
-
-      loadDashboard().catch(error => console.error(error));
+      document.getElementById('payment-refresh').addEventListener('click', loadPayments);
+      document.getElementById('uniform-refresh').addEventListener('click', loadUniforms);
+      loadDashboard();
     </script>
   </body>
 </html>
