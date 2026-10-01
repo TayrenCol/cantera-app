@@ -3,121 +3,234 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Cantera App - Centro de Ayuda</title>
-  <!-- Tailwind CSS CDN -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Alpine.js CDN -->
-  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+  <meta name="theme-color" content="#f5f5ef">
+  <title>Centro de Ayuda | Cantera App</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #17251f;
+      --muted: #64716a;
+      --paper: #f5f5ef;
+      --surface: #fffefa;
+      --line: #dce1d9;
+      --green: #176b52;
+      --green-soft: #e5f1eb;
+      --lime: #c9e66b;
+      --amber: #d98737;
+      --red: #a33b31;
+      font-family: "Trebuchet MS", "Segoe UI", sans-serif;
+      font-synthesis: none;
+      text-rendering: optimizeLegibility;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--paper); color: var(--ink); }
+    a { color: inherit; }
+    button, input { font: inherit; }
+    .page { width: min(1180px, calc(100% - 48px)); margin: 0 auto; }
+    .topbar { display: flex; align-items: center; justify-content: space-between; min-height: 76px; border-bottom: 1px solid var(--line); }
+    .brand { display: inline-flex; align-items: center; gap: 10px; text-decoration: none; font-size: 15px; font-weight: 800; }
+    .brand-mark { display: grid; width: 31px; height: 31px; place-items: center; border-radius: 9px 9px 9px 2px; background: var(--green); color: white; font-size: 15px; }
+    .back-link { color: var(--muted); font-size: 13px; font-weight: 700; text-decoration-thickness: 1px; text-underline-offset: 4px; }
+    .intro { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: end; gap: 24px; padding: 45px 0 30px; }
+    .eyebrow { display: flex; align-items: center; gap: 8px; margin: 0 0 12px; color: var(--green); font-size: 11px; font-weight: 800; letter-spacing: 1.2px; text-transform: uppercase; }
+    .eyebrow::before { width: 20px; height: 2px; background: var(--amber); content: ""; }
+    h1, h2, p { margin-top: 0; }
+    h1 { max-width: 700px; margin-bottom: 12px; font-family: Georgia, "Times New Roman", serif; font-size: clamp(36px, 5vw, 54px); font-weight: 500; line-height: 1.04; }
+    .intro-copy { max-width: 630px; margin-bottom: 0; color: var(--muted); font-size: 15px; line-height: 1.65; }
+    .version { padding: 8px 11px; border: 1px solid var(--line); border-radius: 4px; color: var(--muted); font-size: 11px; font-weight: 700; white-space: nowrap; }
+    .search-band { display: flex; align-items: center; gap: 12px; min-height: 68px; margin-bottom: 32px; padding: 10px 16px; border: 1px solid #cbd5cb; border-radius: 6px; background: var(--surface); box-shadow: 0 7px 20px #263d2b0a; }
+    .search-icon { color: var(--green); font-size: 21px; line-height: 1; }
+    .search-band input { flex: 1; min-width: 0; border: 0; outline: 0; background: transparent; color: var(--ink); font-size: 15px; }
+    .search-band input::placeholder { color: #8a958d; }
+    .clear-button { width: 34px; height: 34px; border: 0; border-radius: 4px; background: transparent; color: var(--muted); cursor: pointer; font-size: 22px; line-height: 1; }
+    .clear-button:hover { background: var(--green-soft); color: var(--green); }
+    .content-layout { display: grid; grid-template-columns: 238px minmax(0, 1fr); align-items: start; gap: 42px; padding-bottom: 72px; }
+    .category-nav { position: sticky; top: 20px; }
+    .nav-label { margin: 0 0 13px; color: var(--muted); font-size: 10px; font-weight: 800; letter-spacing: 1.2px; text-transform: uppercase; }
+    .category-links { display: grid; gap: 5px; }
+    .category-link { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; padding: 11px 12px; border-left: 2px solid transparent; color: #44534b; font-size: 13px; line-height: 1.35; text-decoration: none; }
+    .category-link:hover, .category-link.active { border-left-color: var(--green); background: var(--green-soft); color: var(--green); }
+    .category-count { flex: none; color: #7d8981; font-size: 11px; }
+    .topics { min-width: 0; }
+    .topic-section { padding: 0 0 26px; scroll-margin-top: 20px; }
+    .topic-heading { display: grid; grid-template-columns: 43px minmax(0, 1fr); gap: 14px; margin-bottom: 18px; padding-bottom: 17px; border-bottom: 1px solid var(--line); }
+    .topic-index { display: grid; width: 39px; height: 39px; place-items: center; border-radius: 50%; background: var(--lime); color: #29432d; font-family: Georgia, serif; font-size: 17px; }
+    .topic-heading h2 { margin: 1px 0 5px; font-size: 19px; font-weight: 750; }
+    .topic-heading p { margin: 0; color: var(--muted); font-size: 13px; line-height: 1.5; }
+    .faq-list { border-top: 1px solid var(--line); }
+    .faq-item { border-bottom: 1px solid var(--line); }
+    .faq-item summary { display: flex; align-items: center; justify-content: space-between; gap: 20px; min-height: 59px; padding: 14px 4px; cursor: pointer; font-size: 14px; font-weight: 700; line-height: 1.45; list-style: none; }
+    .faq-item summary::-webkit-details-marker { display: none; }
+    .faq-item summary::after { flex: none; display: grid; width: 25px; height: 25px; place-items: center; border: 1px solid var(--line); border-radius: 50%; color: var(--green); content: "+"; font-size: 17px; font-weight: 400; }
+    .faq-item[open] summary::after { background: var(--green); color: white; content: "−"; }
+    .faq-answer { padding: 0 42px 20px 4px; animation: reveal 180ms ease-out; }
+    .faq-summary { margin: 0 0 12px; color: #47574e; font-size: 13px; line-height: 1.6; }
+    .faq-answer ol, .faq-answer ul { display: grid; gap: 9px; margin: 0; padding-left: 22px; color: var(--muted); font-size: 13px; line-height: 1.6; }
+    .faq-answer li { padding-left: 4px; }
+    .faq-answer li::marker { color: var(--green); font-weight: 800; }
+    .faq-note { margin: 15px 0 0; padding: 11px 13px; border-left: 3px solid var(--amber); background: #fff5e8; color: #6c573c; font-size: 12px; line-height: 1.55; }
+    .status { padding: 28px; border: 1px solid var(--line); border-radius: 5px; background: var(--surface); color: var(--muted); font-size: 14px; line-height: 1.6; }
+    .status[hidden] { display: none; }
+    .retry-button { margin-top: 14px; padding: 9px 13px; border: 0; border-radius: 4px; background: var(--green); color: white; cursor: pointer; font-size: 13px; font-weight: 700; }
+    .footer { display: flex; justify-content: space-between; gap: 16px; padding: 18px 0 24px; border-top: 1px solid var(--line); color: var(--muted); font-size: 11px; }
+    .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; clip-path: inset(50%); }
+    @keyframes reveal { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: translateY(0); } }
+    @media (max-width: 760px) {
+      .page { width: min(100% - 32px, 620px); }
+      .topbar { min-height: 64px; }
+      .intro { grid-template-columns: 1fr; gap: 15px; padding: 35px 0 24px; }
+      h1 { font-size: 42px; }
+      .version { justify-self: start; }
+      .search-band { margin-bottom: 22px; }
+      .content-layout { grid-template-columns: 1fr; gap: 25px; }
+      .category-nav { position: static; }
+      .category-links { display: flex; overflow-x: auto; gap: 7px; padding-bottom: 7px; }
+      .category-link { flex: 0 0 auto; align-items: center; border: 1px solid var(--line); border-radius: 4px; background: var(--surface); }
+      .category-link:hover, .category-link.active { border-color: var(--green); }
+      .topic-heading { grid-template-columns: 37px minmax(0, 1fr); gap: 11px; }
+      .topic-index { width: 35px; height: 35px; }
+      .faq-answer { padding-right: 4px; }
+    }
+    @media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; } }
+  </style>
 </head>
-<body class="bg-white text-black min-h-screen p-6 font-sans">
+<body>
+  <header class="page topbar">
+    <a class="brand" href="/" aria-label="Cantera App, volver al inicio"><span class="brand-mark" aria-hidden="true">C</span> Cantera App</a>
+    <a class="back-link" href="/">Volver al dashboard</a>
+  </header>
 
-  <main class="max-w-3xl mx-auto" x-data="helpCenter()">
-    
-    <!-- Encabezado -->
-    <header class="border-b-2 border-black pb-4 mb-6">
-      <h1 class="text-2xl font-bold tracking-tight uppercase" x-text="modulo">Centro de Ayuda</h1>
-      <p class="text-xs text-gray-600 mt-1">Versión <span x-text="version">1.0</span></p>
-    </header>
+  <main class="page">
+    <section class="intro" aria-labelledby="page-title">
+      <div>
+        <p class="eyebrow">Guía de autogestión</p>
+        <h1 id="page-title">Centro de Ayuda</h1>
+        <p class="intro-copy">Respuestas prácticas para gestionar jugadores, mensualidades y expedientes desde Cantera App.</p>
+      </div>
+      <span id="version" class="version">Cargando versión</span>
+    </section>
 
-    <!-- Buscador -->
-    <div class="mb-6">
-      <input 
-        type="text" 
-        x-model="searchQuery" 
-        @input.debounce.300ms="fetchHelpData()"
-        placeholder="Buscar en el Centro de Ayuda (ej. mensualidades, expediente)..." 
-        class="w-full p-3 bg-white border border-black text-black placeholder-gray-500 text-sm focus:outline-none focus:ring-1 focus:ring-black"
-      />
+    <form class="search-band" role="search" onsubmit="return false">
+      <span class="search-icon" aria-hidden="true">⌕</span>
+      <label class="sr-only" for="help-search">Buscar en el Centro de Ayuda</label>
+      <input id="help-search" type="search" autocomplete="off" placeholder="¿Qué necesitas resolver? Prueba con pagos, acudiente o documentos">
+      <button id="clear-search" class="clear-button" type="button" title="Limpiar búsqueda" aria-label="Limpiar búsqueda" hidden>×</button>
+    </form>
+
+    <div class="content-layout">
+      <nav class="category-nav" aria-label="Temas de ayuda">
+        <p class="nav-label">Explorar temas</p>
+        <div id="category-links" class="category-links"></div>
+      </nav>
+      <div class="topics">
+        <div id="status" class="status" role="status" aria-live="polite">Cargando guías de autogestión...</div>
+        <div id="help-content" class="help-content"></div>
+      </div>
     </div>
-
-    <!-- Indicador de Carga -->
-    <template x-if="loading">
-      <div class="py-8 text-center text-sm text-gray-600 italic">
-        Cargando información...
-      </div>
-    </template>
-
-    <!-- Lista de Categorías y Preguntas -->
-    <template x-if="!loading && categories.length > 0">
-      <div class="space-y-6">
-        <template x-for="category in categories" :key="category.id">
-          <div class="border border-black p-5">
-            
-            <!-- Título de Categoría -->
-            <h2 class="text-base font-bold uppercase tracking-wider mb-4 border-b border-black pb-2" x-text="category.titulo"></h2>
-
-            <!-- Acordeón de Preguntas -->
-            <div class="space-y-3">
-              <template x-for="(faq, index) in category.preguntas" :key="index">
-                <div x-data="{ open: false }" class="border border-gray-400">
-                  <button 
-                    @click="open = !open" 
-                    class="w-full text-left p-3 font-semibold text-sm flex justify-between items-center bg-gray-50 hover:bg-gray-100 transition-colors">
-                    <span x-text="faq.pregunta"></span>
-                    <span class="font-mono text-xs font-bold" x-text="open ? '[-]' : '[+]'"></span>
-                  </button>
-                  <div x-show="open" class="p-4 bg-white text-xs border-t border-gray-300 leading-relaxed text-gray-900">
-                    <ul class="list-disc pl-4 space-y-2">
-                      <template x-for="(paso, pIndex) in faq.pasos" :key="pIndex">
-                        <li x-text="paso"></li>
-                      </template>
-                    </ul>
-                  </div>
-                </div>
-              </template>
-            </div>
-
-          </div>
-        </template>
-      </div>
-    </template>
-
-    <!-- Estado Sin Resultados -->
-    <template x-if="!loading && categories.length === 0">
-      <div class="text-center py-8 border border-black p-4">
-        <p class="text-sm text-gray-600">No se encontraron resultados para tu búsqueda.</p>
-      </div>
-    </template>
-
   </main>
 
+  <footer class="page footer">
+    <span>Cantera App · Manual de usuario</span>
+    <a class="back-link" href="/">Ir al dashboard</a>
+  </footer>
+
   <script>
-    document.addEventListener('alpine:init', () => {
-      Alpine.data('helpCenter', () => ({
-        searchQuery: '',
-        categories: [],
-        modulo: 'Centro de Ayuda',
-        version: '',
-        loading: true,
+    const searchInput = document.getElementById('help-search');
+    const clearButton = document.getElementById('clear-search');
+    const categoryLinks = document.getElementById('category-links');
+    const helpContent = document.getElementById('help-content');
+    const status = document.getElementById('status');
+    const version = document.getElementById('version');
+    let searchTimer;
+    let activeRequest;
 
-        async init() {
-          await this.fetchHelpData();
-        },
+    function escapeHtml(value = '') {
+      return String(value).replace(/[&<>"']/g, character => ({
+        '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+      })[character]);
+    }
 
-        async fetchHelpData() {
-          this.loading = true;
-          try {
-            const url = this.searchQuery 
-              ? `http://localhost:3000/api/help?q=${encodeURIComponent(this.searchQuery)}`
-              : 'http://localhost:3000/api/help';
+    function renderCategories(categories) {
+      categoryLinks.innerHTML = categories.map((category, index) => `
+        <a class="category-link" href="#${escapeHtml(category.id)}">
+          <span>${escapeHtml(category.titulo)}</span><span class="category-count">${category.preguntas.length}</span>
+        </a>
+      `).join('');
 
-            const response = await fetch(url);
-            const result = await response.json();
+      helpContent.innerHTML = categories.map((category, categoryIndex) => `
+        <section class="topic-section" id="${escapeHtml(category.id)}" aria-labelledby="heading-${escapeHtml(category.id)}">
+          <header class="topic-heading">
+            <span class="topic-index" aria-hidden="true">${String(categoryIndex + 1).padStart(2, '0')}</span>
+            <div>
+              <h2 id="heading-${escapeHtml(category.id)}">${escapeHtml(category.titulo)}</h2>
+              <p>${escapeHtml(category.descripcion || '')}</p>
+            </div>
+          </header>
+          <div class="faq-list">
+            ${category.preguntas.map((faq, faqIndex) => `
+              <details class="faq-item">
+                <summary>${escapeHtml(faq.pregunta)}</summary>
+                <div class="faq-answer">
+                  ${faq.resumen ? `<p class="faq-summary">${escapeHtml(faq.resumen)}</p>` : ''}
+                  <ol>${(faq.pasos || []).map(step => `<li>${escapeHtml(step)}</li>`).join('')}</ol>
+                  ${faq.nota ? `<p class="faq-note"><strong>Ten en cuenta:</strong> ${escapeHtml(faq.nota)}</p>` : ''}
+                </div>
+              </details>
+            `).join('')}
+          </div>
+        </section>
+      `).join('');
 
-            if (result.success) {
-              this.categories = result.data;
-              this.modulo = result.modulo || this.modulo;
-              this.version = result.version || '';
-            }
-          } catch (error) {
-            console.error('Error al consultar la API de Ayuda:', error);
-          } finally {
-            this.loading = false;
-          }
+      document.querySelectorAll('.category-link').forEach(link => {
+        link.addEventListener('click', () => {
+          document.querySelectorAll('.category-link').forEach(item => item.classList.remove('active'));
+          link.classList.add('active');
+        });
+      });
+    }
+
+    async function loadHelp() {
+      activeRequest?.abort();
+      activeRequest = new AbortController();
+      const query = searchInput.value.trim();
+      clearButton.hidden = !query;
+      status.hidden = false;
+      status.textContent = query ? 'Buscando en las guías...' : 'Cargando guías de autogestión...';
+      helpContent.innerHTML = '';
+      categoryLinks.innerHTML = '';
+
+      try {
+        const url = query ? `/api/help?q=${encodeURIComponent(query)}` : '/api/help';
+        const response = await fetch(url, { signal: activeRequest.signal });
+        if (!response.ok) throw new Error('No fue posible consultar las guías.');
+        const result = await response.json();
+        if (!result.success) throw new Error('No fue posible consultar las guías.');
+
+        version.textContent = `Versión ${result.version || 'actual'}`;
+        if (!result.data.length) {
+          status.textContent = `No encontramos resultados para “${query}”. Prueba con otro término.`;
+          return;
         }
-      }));
-    });
-  </script>
 
+        status.hidden = true;
+        renderCategories(result.data);
+      } catch (error) {
+        if (error.name === 'AbortError') return;
+        console.error('Error al consultar el Centro de Ayuda:', error);
+        status.innerHTML = 'No se pudieron cargar las guías. Revisa la conexión e inténtalo de nuevo.<br><button class="retry-button" type="button" onclick="loadHelp()">Reintentar</button>';
+      }
+    }
+
+    searchInput.addEventListener('input', () => {
+      clearTimeout(searchTimer);
+      searchTimer = setTimeout(loadHelp, 250);
+    });
+    clearButton.addEventListener('click', () => {
+      searchInput.value = '';
+      searchInput.focus();
+      loadHelp();
+    });
+    loadHelp();
+  </script>
 </body>
 </html>

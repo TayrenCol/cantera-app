@@ -75,16 +75,16 @@ app.get('/api/help', (req, res) => {
 
       resultCategories = resultCategories
         .map(cat => {
+          const categoryMatches = [cat.titulo, cat.descripcion].some(text =>
+            text?.toLowerCase().includes(searchTerm)
+          );
           const matchingQuestions = cat.preguntas.filter(p => {
-            // Coincidencia en el texto de la pregunta
-            const matchInQuestion = p.pregunta.toLowerCase().includes(searchTerm);
-            
-            // Coincidencia en alguno de los pasos/instrucciones del arreglo
-            const matchInSteps = Array.isArray(p.pasos) && p.pasos.some(paso => 
-              paso.toLowerCase().includes(searchTerm)
-            );
+            const searchableText = [p.pregunta, p.resumen, p.nota, ...(p.pasos || [])]
+              .filter(Boolean)
+              .join(' ')
+              .toLowerCase();
 
-            return matchInQuestion || matchInSteps;
+            return categoryMatches || searchableText.includes(searchTerm);
           });
 
           return {

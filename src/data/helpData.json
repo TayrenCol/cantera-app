@@ -3,20 +3,61 @@
   "version": "1.0-MVP",
   "categorias": [
     {
+      "id": "jugadores-categorias",
+      "titulo": "Jugadores y categorías",
+      "descripcion": "Organiza las fichas, los datos de contacto y la asignación deportiva de cada jugador.",
+      "icono": "users",
+      "preguntas": [
+        {
+          "pregunta": "¿Cómo registrar a un jugador?",
+          "resumen": "Crea una ficha individual y completa los datos del deportista y de su acudiente principal.",
+          "pasos": [
+            "Abre Jugadores desde el menú lateral y elige la acción para agregar un jugador.",
+            "Completa los datos personales solicitados, incluido el año de nacimiento.",
+            "Registra el nombre, el documento y el teléfono del acudiente principal.",
+            "Guarda la ficha y revisa que el jugador aparezca en la lista."
+          ],
+          "nota": "El acudiente principal es el contacto de referencia para la información administrativa del jugador."
+        },
+        {
+          "pregunta": "¿Cómo se asigna la categoría deportiva?",
+          "resumen": "La categoría se determina a partir del año de nacimiento registrado en la ficha.",
+          "pasos": [
+            "Verifica el año de nacimiento antes de guardar o actualizar la ficha.",
+            "La asignación prevista para el MVP contempla las categorías 2022-2023, 2021, 2020, 2019, 2017-2018 B, 2017-2018 A, 2016, 2015 y 2013-2014.",
+            "Si el jugador queda en una categoría inesperada, revisa el año registrado y solicita la corrección de la ficha."
+          ]
+        },
+        {
+          "pregunta": "¿Qué información del acudiente debo mantener actualizada?",
+          "resumen": "La ficha debe identificar al acudiente principal y permitir contactarlo.",
+          "pasos": [
+            "Confirma el nombre completo del acudiente y su número de documento.",
+            "Registra un teléfono vigente del padre, madre o responsable principal.",
+            "Actualiza los datos en la ficha cuando cambie el contacto."
+          ]
+        }
+      ]
+    },
+    {
       "id": "cartera-pagos",
       "titulo": "Gestión de Mensualidades y Pagos",
+      "descripcion": "Consulta tarifas, registra cobros y revisa el estado de las mensualidades de cada jugador.",
       "icono": "credit-card",
       "preguntas": [
         {
           "pregunta": "¿Cuándo se vencen las mensualidades de los jugadores?",
+          "resumen": "El plazo de pago corresponde al primer fin de semana de cada mes.",
           "pasos": [
             "Plazo de pago: Cancelar durante el primer fin de semana de cada mes.",
             "Activación de alerta: El sistema marcará la cuenta en estado 'Pendiente/Vencido' el primer lunes hábil posterior.",
             "Restricción: Jugadores con cartera vencida podrían presentar bloqueos en planillas."
-          ]
+          ],
+          "nota": "Revisa el estado en Mensualidades y confirma el comprobante antes de reportar una diferencia."
         },
         {
           "pregunta": "¿Cuáles son las tarifas según la categoría del jugador?",
+          "resumen": "La mensualidad y la inscripción varían según el grupo de categorías.",
           "pasos": [
             "Categorías 2022 - 2023: Mensualidad $80.000 / Inscripción $190.000.",
             "Categorías 2021 a 2013-2014: Mensualidad $110.000 / Inscripción $300.000.",
@@ -25,12 +66,23 @@
         },
         {
           "pregunta": "¿Cómo relacionar un pago con un jugador?",
+          "resumen": "Asocia cada cobro con el jugador y el concepto correcto para que su estado quede actualizado.",
           "pasos": [
             "1. Ingresa al módulo 'Pagos' en el menú lateral.",
             "2. Selecciona el nombre del jugador en el buscador.",
             "3. Elige el concepto a cancelar (Inscripción o Mes correspondiente).",
             "4. Digita el monto e ingresa el número de comprobante.",
             "5. Guarda los cambios para actualizar el estado a 'Pagado'."
+          ],
+          "nota": "Antes de guardar, comprueba el periodo y el valor. Conserva el comprobante para resolver consultas."
+        },
+        {
+          "pregunta": "¿Qué hago si un pago aparece como pendiente aunque ya se realizó?",
+          "resumen": "Comprueba que el cobro esté registrado para el jugador, el concepto y el periodo correctos.",
+          "pasos": [
+            "Busca al jugador en la lista de Mensualidades y revisa el periodo consultado.",
+            "Confirma si el pago fue asociado a otro mes o a otro concepto.",
+            "Si el registro no aparece, reúne el comprobante y solicita la revisión a la persona administradora antes de duplicar el cobro."
           ]
         }
       ]
@@ -38,22 +90,75 @@
     {
       "id": "expediente-documentos",
       "titulo": "Expediente Digital de Documentación",
+      "descripcion": "Completa y verifica los seis documentos requeridos para mantener al día el expediente del jugador.",
       "icono": "folder-check",
       "preguntas": [
         {
           "pregunta": "¿Cuáles son los 6 documentos obligatorios por jugador?",
+          "resumen": "El expediente reúne tres documentos personales y tres documentos normativos del club.",
           "pasos": [
             "Documentos Personales (3): Registro Civil / Tarjeta Identidad, Certificado de EPS, Cédula del Acudiente.",
             "Documentos Normativos (3): Hoja de Vida, Compromiso de Vinculación, Cesión de Derechos de Imagen.",
             "Requisitos de archivo: Formato PDF o JPG/PNG no mayor a 5 MB por documento."
-          ]
+          ],
+          "nota": "Comprueba que el archivo corresponda al jugador y que el texto se pueda leer antes de cargarlo."
         },
         {
           "pregunta": "¿Qué significa el indicador 'Documentación Incompleta'?",
+          "resumen": "Al perfil le falta al menos uno de los seis documentos requeridos.",
           "pasos": [
             "Indica que al perfil del deportista le falta al menos 1 de los 6 documentos requeridos.",
             "Haz clic sobre la alerta en la lista de jugadores para ir directo al expediente.",
             "Carga el archivo faltante y el sistema validará el estado a 'Completo' automáticamente."
+          ]
+        },
+        {
+          "pregunta": "¿Cómo completar y revisar un expediente?",
+          "resumen": "Carga los archivos faltantes y comprueba que cada documento quede asociado a la ficha correcta.",
+          "pasos": [
+            "Abre la ficha del jugador y entra a su expediente digital.",
+            "Identifica los documentos marcados como pendientes y selecciona el tipo correspondiente.",
+            "Carga un archivo PDF, JPG o PNG de hasta 5 MB por documento.",
+            "Verifica que el archivo se pueda abrir y que el indicador del expediente cambie cuando estén completos los requisitos."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "dashboard-alertas",
+      "titulo": "Dashboard y alertas",
+      "descripcion": "Interpreta los indicadores de operación y prioriza los pagos atrasados y los expedientes incompletos.",
+      "icono": "chart",
+      "preguntas": [
+        {
+          "pregunta": "¿Qué muestran los indicadores del dashboard?",
+          "resumen": "El resumen reúne alumnos, pagos y datos operativos disponibles en la aplicación.",
+          "pasos": [
+            "Total alumnos: cantidad de jugadores registrados.",
+            "Activos: jugadores con estado activo.",
+            "Mensualidades pagadas y pendientes: resumen del estado de los cobros.",
+            "Con uniforme y sin uniforme: seguimiento de la información de uniformes.",
+            "Sin acudiente completo: jugadores cuya información de contacto del acudiente requiere revisión."
+          ]
+        },
+        {
+          "pregunta": "¿Cómo atender una alerta de cartera vencida?",
+          "resumen": "Confirma el periodo y el registro del pago antes de contactar al acudiente.",
+          "pasos": [
+            "Abre la sección de alertas del dashboard y localiza al jugador.",
+            "Revisa el periodo en Mensualidades y comprueba si el pago ya fue registrado.",
+            "Si sigue pendiente, contacta al acudiente por el canal habitual y registra el pago cuando se confirme.",
+            "El dashboard consolida los estados disponibles; vuelve a consultarlo después de actualizar el registro."
+          ],
+          "nota": "El MVP contempla alertas para pagos con más de cinco días de retraso y estados pendientes o vencidos."
+        },
+        {
+          "pregunta": "¿Qué significa que falte información del acudiente?",
+          "resumen": "La ficha requiere revisar los datos de contacto del responsable principal.",
+          "pasos": [
+            "Busca al jugador desde la sección Jugadores.",
+            "Abre su ficha y confirma el nombre, documento y teléfono del acudiente principal.",
+            "Completa o corrige los datos y vuelve al dashboard para consultar el indicador actualizado."
           ]
         }
       ]
