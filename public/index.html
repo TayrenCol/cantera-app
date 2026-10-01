@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cantera App Dashboard</title>
+    <style>
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+        background: #f4f7fb;
+        color: #1f2937;
+      }
+      .layout {
+        display: flex;
+        min-height: 100vh;
+      }
+      .sidebar {
+        width: 220px;
+        background: #111827;
+        color: white;
+        padding: 24px 18px;
+      }
+      .brand {
+        font-size: 1.5rem;
+        font-weight: bold;
+        margin-bottom: 32px;
+      }
+      .nav {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+      .nav a {
+        color: #d1d5db;
+        text-decoration: none;
+        padding: 10px 12px;
+        border-radius: 8px;
+      }
+      .nav a:hover {
+        background: #1f2937;
+      }
+      .main {
+        flex: 1;
+        padding: 32px;
+      }
+      .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 24px;
+      }
+      .cards {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: 18px;
+        margin-bottom: 24px;
+      }
+      .card {
+        background: white;
+        border-radius: 12px;
+        padding: 18px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+      }
+      .card h3 {
+        margin: 0 0 12px;
+        font-size: 0.9rem;
+        color: #6b7280;
+      }
+      .card .value {
+        font-size: 1.8rem;
+        font-weight: bold;
+      }
+      .content {
+        display: grid;
+        grid-template-columns: 1.5fr 1fr;
+        gap: 24px;
+      }
+      .view { display: none; }
+      .view.active { display: block; }
+      .toolbar { display: flex; gap: 10px; margin-bottom: 16px; }
+      .toolbar input, .toolbar select, button { padding: 9px 12px; border: 1px solid #d1d5db; border-radius: 6px; background: white; }
+      .toolbar button, button { cursor: pointer; }
+      .muted { color: #6b7280; }
+      .table-wrap { overflow-x: auto; }
+      .panel {
+        background: white;
+        border-radius: 12px;
+        padding: 18px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 12px;
+      }
+      th, td {
+        text-align: left;
+        padding: 10px 8px;
+        border-bottom: 1px solid #e5e7eb;
+      }
+      .badge {
+        display: inline-block;
+        padding: 6px 10px;
+        border-radius: 999px;
+        font-size: 0.75rem;
+        font-weight: bold;
+      }
+      .paid { background: #dcfce7; color: #166534; }
+      .pending { background: #fef3c7; color: #92400e; }
+      .critical { background: #fee2e2; color: #991b1b; }
+      ul {
+        padding-left: 18px;
+      }
+      li { margin-bottom: 10px; }
+    </style>
+  </head>
+  <body>
+    <div class="layout">
+      <aside class="sidebar">
+        <div class="brand">Cantera</div>
+        <nav class="nav">
+          <a href="#dashboard" data-view="dashboard">Dashboard</a>
+          <a href="#players" data-view="players">Jugadores</a>
+          <a href="#retired" data-view="retired">Retirados</a>
+          <a href="#payments" data-view="payments">Mensualidades</a>
+          <a href="#uniforms" data-view="uniforms">Uniformes</a>
+          <a href="#">Configuración</a>
+        </nav>
+      </aside>
+
+      <main class="main">
+        <div class="header">
+          <h1 id="page-title">Dashboard</h1>
+        </div>
+
+        <section id="dashboard-view" class="view active">
+          <section id="stats" class="cards"></section>
+
+          <div class="content">
+          <section class="panel">
+            <h2>Pagos recientes</h2>
+            <table>
+              <thead>
+                <tr>
+                  <th>Alumno</th>
+                  <th>Concepto</th>
+                  <th>Monto</th>
+                  <th>Estado</th>
+                </tr>
+              </thead>
+              <tbody id="payments"></tbody>
+            </table>
+          </section>
+
+          <section class="panel">
+            <h2>Alertas</h2>
+            <ul id="alerts"></ul>
+          </section>
+          </div>
+        </section>
+
+        <section id="players-view" class="view panel">
+          <div class="toolbar"><input id="player-search" placeholder="Buscar jugador, documento o registro"><button id="player-search-button">Buscar</button></div>
+          <div class="table-wrap"><table><thead><tr><th>Nombre</th><th>Registro</th><th>Año nacimiento</th><th>Estado</th><th>Uniforme</th><th>Acudiente</th><th>Acción</th></tr></thead><tbody id="players-table"></tbody></table></div>
+          <p id="players-total" class="muted"></p>
+        </section>
+
+        <section id="payments-view" class="view panel">
+          <div class="toolbar"><select id="payment-month"></select><button id="payment-refresh">Actualizar</button></div>
+          <div class="table-wrap"><table><thead><tr><th>Jugador</th><th>Periodo</th><th>Estado</th><th>Fecha de pago</th></tr></thead><tbody id="payments-table"></tbody></table></div>
+        </section>
+
+        <section id="uniforms-view" class="view panel">
+          <div class="toolbar"><button id="uniform-refresh">Actualizar</button></div>
+          <div class="table-wrap"><table><thead><tr><th>Jugador</th><th>Azul</th><th>Gris</th><th>Torneo 1</th><th>Torneo 2</th></tr></thead><tbody id="uniforms-table"></tbody></table></div>
+        </section>
+      </main>
+    </div>
+
+    <script>
+      async function loadDashboard() {
+        const response = await fetch('/api/dashboard/overview');
+        const data = await response.json();
+
+        const stats = document.getElementById('stats');
+        const cards = [
+          { label: 'Total alumnos', value: data.stats.totalStudents },
+          { label: 'Activos', value: data.stats.activeStudents },
+          { label: 'Mensualidades pagadas', value: data.stats.paidPayments },
+          { label: 'Mensualidades pendientes', value: data.stats.pendingPayments },
+          { label: 'Con uniforme', value: data.stats.playersWithUniform },
+          { label: 'Sin uniforme', value: data.stats.playersWithoutUniform },
+          { label: 'Sin acudiente completo', value: data.stats.playersWithoutGuardianContact },
+        ];
+
+        stats.innerHTML = cards.map(card => `
+          <div class="card">
+            <h3>${card.label}</h3>
+            <div class="value">${card.value}</div>
+          </div>
+        `).join('');
+
+        const payments = document.getElementById('payments');
+        payments.innerHTML = data.recentPayments.map(item => `
+          <tr>
+            <td>${item.student}</td>
+            <td>${item.concept}</td>
+            <td>${item.amount === null ? 'Sin monto' : `$${item.amount.toLocaleString()}`}</td>
+            <td><span class="badge ${item.status === 'Pagado' ? 'paid' : 'pending'}">${item.status}</span></td>
+          </tr>
+        `).join('');
+
+        const alerts = document.getElementById('alerts');
+        alerts.innerHTML = data.alerts.map(item => `<li>${item}</li>`).join('');
+      }
+
+      const monthNames = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+      const currentYear = new Date().getFullYear();
+      const currentMonth = new Date().getMonth() + 1;
+      document.getElementById('payment-month').innerHTML = monthNames.map((name, index) => `<option value="${index + 1}" ${index + 1 === currentMonth ? 'selected' : ''}>${name} ${currentYear}</option>`).join('');
+
+      let currentPlayerStatus = 'active';
+
+      async function loadPlayers(status = currentPlayerStatus) {
+        currentPlayerStatus = status;
+        const search = encodeURIComponent(document.getElementById('player-search').value);
+        const data = await fetch(`/api/dashboard/players?status=${status}&search=${search}&limit=100`).then(response => response.json());
+        document.getElementById('players-table').innerHTML = data.rows.map(player => `<tr><td>${player.name}</td><td>${player.registrationNumber || '-'}</td><td>${player.birthYear || '-'}</td><td>${player.enrollmentStatus || '-'}</td><td>${player.hasUniform ? 'Sí' : 'No'}</td><td><span class="badge ${player.hasGuardianContact ? 'paid' : 'critical'}">${player.hasGuardianContact ? 'Completo' : 'Falta información'}</span></td><td><button data-guardian-id="${player.id}">${player.hasGuardianContact ? 'Editar' : 'Completar'}</button></td></tr>`).join('');
+        document.getElementById('players-total').textContent = `${data.total} jugadores encontrados`;
+      }
+
+      async function loadPayments() {
+        const month = document.getElementById('payment-month').value;
+        const data = await fetch(`/api/dashboard/payments?year=${currentYear}&month=${month}&limit=100`).then(response => response.json());
+        document.getElementById('payments-table').innerHTML = data.map(payment => `<tr><td>${payment.playerName}</td><td>${payment.month}/${payment.year}</td><td><span class="badge ${['OK', '$'].includes(payment.paymentStatus) ? 'paid' : 'pending'}">${payment.paymentStatus || 'Pendiente'}</span></td><td>${payment.paymentDate ? new Date(payment.paymentDate).toLocaleDateString() : '-'}</td></tr>`).join('');
+      }
+
+      async function loadUniforms() {
+        const data = await fetch(`/api/dashboard/uniforms?year=${currentYear}&limit=100`).then(response => response.json());
+        document.getElementById('uniforms-table').innerHTML = data.map(uniform => `<tr><td>${uniform.playerName}</td><td>${uniform.blueUniform || '-'}</td><td>${uniform.grayUniform || '-'}</td><td>${uniform.tournamentOne || '-'}</td><td>${uniform.tournamentTwo || '-'}</td></tr>`).join('');
+      }
+
+      function showView(view) {
+        document.querySelectorAll('.view').forEach(element => element.classList.remove('active'));
+        const targetView = view === 'retired' ? 'players' : view;
+        document.getElementById(`${targetView}-view`).classList.add('active');
+        document.getElementById('page-title').textContent = { dashboard: 'Dashboard', players: 'Jugadores activos', retired: 'Jugadores retirados', payments: 'Mensualidades', uniforms: 'Uniformes' }[view];
+        if (view === 'players') loadPlayers('active');
+        if (view === 'retired') loadPlayers('retired');
+        if (view === 'payments') loadPayments();
+        if (view === 'uniforms') loadUniforms();
+      }
+
+      document.querySelectorAll('[data-view]').forEach(link => link.addEventListener('click', event => { event.preventDefault(); showView(link.dataset.view); }));
+      document.getElementById('player-search-button').addEventListener('click', () => loadPlayers(currentPlayerStatus));
+      document.getElementById('players-table').addEventListener('click', async event => {
+        const button = event.target.closest('[data-guardian-id]');
+        if (!button) return;
+        const data = await fetch(`/api/dashboard/players?status=${currentPlayerStatus}&search=${button.dataset.guardianId}&limit=100`).then(response => response.json());
+        const player = data.rows.find(item => String(item.id) === button.dataset.guardianId);
+        if (!player) return;
+        const motherName = prompt('Nombre de la acudiente/mamá:', player.motherName || '');
+        if (motherName === null) return;
+        const motherPhone = prompt('Teléfono de la acudiente/mamá:', player.motherPhone || '');
+        if (motherPhone === null) return;
+        const fatherName = prompt('Nombre del acudiente/papá (opcional):', player.fatherName || '');
+        if (fatherName === null) return;
+        const fatherPhone = prompt('Teléfono del acudiente/papá (opcional):', player.fatherPhone || '');
+        if (fatherPhone === null) return;
+        const response = await fetch(`/api/dashboard/players/${player.id}/guardians`, { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ motherName, motherPhone, fatherName, fatherPhone }) });
+        const result = await response.json();
+        if (!response.ok) return alert(result.message || 'No se pudieron guardar los datos');
+        await loadPlayers();
+        alert('Datos del acudiente actualizados correctamente');
+      });
+      document.getElementById('payment-refresh').addEventListener('click', loadPayments);
+      document.getElementById('uniform-refresh').addEventListener('click', loadUniforms);
+      loadDashboard();
+    </script>
+  </body>
+</html>

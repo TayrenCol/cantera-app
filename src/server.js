@@ -5,6 +5,7 @@ import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import db from './config/db.js';
+import dashboardRoutes from './routes/dashboardRoutes.js';
 
 dotenv.config();
 
@@ -18,6 +19,8 @@ const __dirname = path.dirname(__filename);
 // Middlewares
 app.use(cors()); // Habilita peticiones entre dominios (CORS)
 app.use(express.json());
+app.use(express.static('public'));
+app.use('/api/dashboard', dashboardRoutes);
 
 // Cargar el archivo JSON del Centro de Ayuda
 const helpDataPath = path.join(__dirname, 'data', 'helpData.json');
@@ -46,6 +49,12 @@ app.get('/health', async (req, res) => {
   }
 });
 
+// Ruta principal: sirve la vista del dashboard
+app.get('/', (req, res) => {
+  res.sendFile('index.html', { root: 'public' });
+});
+
+// Listener de Express (importante escuchar en '0.0.0.0')
 // 3. Endpoint del Centro de Ayuda (RF-11) con filtrado y búsqueda
 app.get('/api/help', (req, res) => {
   try {
